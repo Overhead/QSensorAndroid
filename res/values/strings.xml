@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">QsensorApp</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="new_movie_button">New Movie</string>
+    <string name="my_movies_button">My Movies</string>
+    <string name="community_button">Community</string>
+    <string name="back_button">Back</string>
+    <string name="add_movie_button">Add Movie</string>
+    <string name="title_activity_show_movies">ShowMoviesActivity</string>
+    <string name="title_activity_new_movie">NewMovieActivity</string>
+    <string name="movieName_hint">Enter movie name</string>
+    <string name="gender_hint">Enter your gender</string>
+    <string name="age_hint">Enter your age</string>
+
+</resources>
