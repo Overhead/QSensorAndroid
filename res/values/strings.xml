@@ -14,5 +14,7 @@
     <string name="movieName_hint">Enter movie name</string>
     <string name="gender_hint">Enter your gender</string>
     <string name="age_hint">Enter your age</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="set_settings_button">Save</string>
 
 </resources>
