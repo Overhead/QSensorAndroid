@@ -15,23 +15,23 @@ public class MainActivity extends Activity {
 
 	public static String age = "";
 	public static String gender = "";
-	TextView info;
+	TextView infoField;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        info = (TextView)findViewById(R.id.infoTextView);
-        info.setText(" Gender: " + gender + "\n Age: " + age );
+        infoField = (TextView)findViewById(R.id.infoTextView);
+        infoField.setText(" Age: \n Gender: ");
         
     }
     
     @Override
     protected void onResume() {
     	super.onResume();
-    	 info = (TextView)findViewById(R.id.infoTextView);
-         info.setText(" Age: " + age + "\n Gender: " + gender );
+    	 infoField = (TextView)findViewById(R.id.infoTextView);
+         infoField.setText(" Age: " + age + "\n Gender: " + gender );
     }
     
     @Override
@@ -69,22 +69,20 @@ public class MainActivity extends Activity {
     	
     	//Start the showBooksActivity when show books button is clicked
     	case R.id.new_movie_button:
-    		myIntent = new Intent(view.getContext(), NewMovieActivity.class);
-    	     startActivityForResult(myIntent, 0);
+    		 myIntent = new Intent(view.getContext(), NewMovieActivity.class);
+    	     startActivity(myIntent);
     	     break;
     	
     	 //Start the registerBooksAcitivty when register button is clicked
     	case R.id.my_movies_button:
     		myIntent = new Intent(view.getContext(), ShowMoviesActivity.class);
-   	     	startActivityForResult(myIntent, 0);
+   	     	startActivity(myIntent);
    	     	break;
    	     
    	    //Start the delteBookActivity when the show button(beneath delete) is clicked
     	case R.id.community_button:
     		Toast.makeText(getApplicationContext(), "Community",
     				Toast.LENGTH_SHORT).show();
-    		/*myIntent = new Intent(view.getContext(), deleteBookActivity.class);
-   	     	startActivityForResult(myIntent, 0);*/
    	     	break;
     	}
        

@@ -1,11 +1,9 @@
 package com.example.qsensorapp;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class SettingsActivity extends Activity {
@@ -28,8 +26,10 @@ public class SettingsActivity extends Activity {
     	case R.id.set_settings_button:
     			EditText gender = (EditText)findViewById(R.id.genderTextField);
     			EditText age = (EditText)findViewById(R.id.ageTextField);
+    			
     			Toast.makeText(getApplicationContext(), "Saved",
         				Toast.LENGTH_SHORT).show();
+    			
     			MainActivity.age = age.getText().toString();
     			MainActivity.gender = gender.getText().toString();
     			finish();
