@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="age_prompt"> Choose age-group </string>
+    <string-array name="age">
+        <item>8-15</item>
+        <item>16-20</item>
+        <item>21-25</item> 
+        <item>26-35	</item>
+        <item>36-50</item>
+        <item>50+</item>  
+    </string-array>
+</resources>

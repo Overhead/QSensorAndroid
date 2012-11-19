@@ -8,6 +8,9 @@
         android:minSdkVersion="7"
         android:targetSdkVersion="16" />
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
     <application
         android:allowBackup="true"
         android:debuggable="true"
@@ -35,6 +38,7 @@
             android:name="com.example.qsensorapp.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
+       	 
     </application>
 
 </manifest>

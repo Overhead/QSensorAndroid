@@ -1,8 +1,11 @@
 package com.example.qsensorapp;
 
+
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,11 +13,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import classes.Movie;
+import database.DBAdapter;
 
 public class MainActivity extends Activity {
 
-	public static String age = "";
-	public static String gender = "";
+	private DBAdapter database;
+		
+	public static String age = "N/A";
+	public static String gender = "N/A";
+	public static List<Movie> moviesList = new ArrayList<Movie>();
 	TextView infoField;
 	
     @Override
@@ -22,8 +30,18 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
+        database = new DBAdapter(this);
+        database.open();
+        
+        
+       /* Movie m = new Movie("Moras", gender, 20, 40);
+        database.insertEntry(m);*/
+        
+        for(Movie m : database.getAllMovies())
+        	moviesList.add(m);
+         
         infoField = (TextView)findViewById(R.id.infoTextView);
-        infoField.setText(" Age: \n Gender: ");
+        infoField.setText(" Age-group: \n Gender: ");
         
     }
     
@@ -31,7 +49,7 @@ public class MainActivity extends Activity {
     protected void onResume() {
     	super.onResume();
     	 infoField = (TextView)findViewById(R.id.infoTextView);
-         infoField.setText(" Age: " + age + "\n Gender: " + gender );
+         infoField.setText(" Age-group: " + age + "\n Gender: " + gender );
     }
     
     @Override
@@ -41,6 +59,32 @@ public class MainActivity extends Activity {
         return true;
     }
     
+    
+	public void bluetooth() {
+		/*BluetoothAdapter bluetooth = BluetoothAdapter.getDefaultAdapter();
+		String toastText;
+		if (bluetooth.isEnabled()) {
+			String address = bluetooth.getAddress();
+			bluetooth.setName("QSensorPhone");
+			String name = bluetooth.getName();
+			toastText = name + " : " + address;
+		} else
+			toastText = "Bluetooth is not enabled";
+		Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();*/
+		
+		if(BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+			Toast.makeText(getApplicationContext(), "Turned bluetooth off",
+    				Toast.LENGTH_SHORT).show();
+			BluetoothAdapter.getDefaultAdapter().disable();
+		}
+    	else
+		{
+			String enableBT = BluetoothAdapter.ACTION_REQUEST_ENABLE;
+    		startActivityForResult(new Intent(enableBT), 0);
+    		
+		}
+		
+	}
     
     /**
      * Choices for the menu
@@ -81,12 +125,11 @@ public class MainActivity extends Activity {
    	     
    	    //Start the delteBookActivity when the show button(beneath delete) is clicked
     	case R.id.community_button:
-    		Toast.makeText(getApplicationContext(), "Community",
-    				Toast.LENGTH_SHORT).show();
+    		/*Toast.makeText(getApplicationContext(), "Community",
+    				Toast.LENGTH_SHORT).show();*/
+    		bluetooth();
    	     	break;
     	}
        
     }
-
-    
 }

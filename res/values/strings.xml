@@ -16,5 +16,6 @@
     <string name="age_hint">Enter your age</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="set_settings_button">Save</string>
+    <string name="title_activity_bluetooth">BluetoothActivity</string>
 
 </resources>

@@ -1,5 +1,9 @@
 package com.example.qsensorapp;
 
+import com.example.qsensorapp.R;
+import com.example.qsensorapp.R.id;
+import com.example.qsensorapp.R.layout;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.View;
