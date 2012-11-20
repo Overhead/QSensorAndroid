@@ -37,8 +37,10 @@ public class MainActivity extends Activity {
        /* Movie m = new Movie("Moras", gender, 20, 40);
         database.insertEntry(m);*/
         
-        for(Movie m : database.getAllMovies())
-        	moviesList.add(m);
+        if(!database.getAllMovies().isEmpty()) {
+	        for(Movie m : database.getAllMovies())
+	        	moviesList.add(m);
+        }
          
         infoField = (TextView)findViewById(R.id.infoTextView);
         infoField.setText(" Age-group: \n Gender: ");
@@ -50,6 +52,12 @@ public class MainActivity extends Activity {
     	super.onResume();
     	 infoField = (TextView)findViewById(R.id.infoTextView);
          infoField.setText(" Age-group: " + age + "\n Gender: " + gender );
+    }
+    
+    @Override
+    protected void onDestroy() {
+    	super.onDestroy();
+    	moviesList.clear();
     }
     
     @Override
