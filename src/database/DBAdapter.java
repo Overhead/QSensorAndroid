@@ -93,8 +93,8 @@ public class DBAdapter {
 
 		String movieName = myCursor.getString(myCursor.getColumnIndex(MOVIENAME));
 		String gender = myCursor.getString(myCursor.getColumnIndex(GENDER));
-		int age = Integer.parseInt(myCursor.getString(myCursor.getColumnIndex(AGE)));
-		int emotionValue = Integer.parseInt(myCursor.getString(myCursor.getColumnIndex(EMOTIONVALUE)));
+		String age = myCursor.getString(myCursor.getColumnIndex(AGE));
+		double emotionValue = Double.parseDouble(myCursor.getString(myCursor.getColumnIndex(EMOTIONVALUE)));
 
 		objectInstance = new Movie(movieName, gender, age, emotionValue);
 		return objectInstance;
@@ -104,15 +104,15 @@ public class DBAdapter {
 		List<Movie> movieList = new ArrayList<Movie>();
 		
 		Cursor myCursor = getAllEntries();
-		String movieName, gender;
-		int age, emotionValue;
+		String movieName, gender, age;
+		double emotionValue;
 		
 		if(myCursor.moveToFirst())
 			do{
 				movieName = myCursor.getString(myCursor.getColumnIndex(MOVIENAME));
 				gender = myCursor.getString(myCursor.getColumnIndex(GENDER));
-				age = Integer.parseInt(myCursor.getString(myCursor.getColumnIndex(AGE)));
-				emotionValue = Integer.parseInt(myCursor.getString(myCursor.getColumnIndex(EMOTIONVALUE)));
+				age = myCursor.getString(myCursor.getColumnIndex(AGE));
+				emotionValue = Double.parseDouble(myCursor.getString(myCursor.getColumnIndex(EMOTIONVALUE)));
 
 				Movie newMovie = new Movie(movieName, gender, age, emotionValue);
 				movieList.add(newMovie);

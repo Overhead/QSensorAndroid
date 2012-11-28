@@ -5,7 +5,7 @@
     android:background="#ADD8E6"
     tools:context=".ShowMoviesActivity" >
 
-    <LinearLayout
+   <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
@@ -28,8 +28,11 @@
                 android:layout_height="wrap_content"
                 android:onClick="onClick"
                 android:text="@string/back_button" />
+           
         </LinearLayout>
 
+       
+        
         <ListView
             android:id="@+id/moviesListView"
             android:layout_width="fill_parent"

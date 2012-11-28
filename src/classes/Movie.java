@@ -2,10 +2,10 @@ package classes;
 
 public class Movie {
 
-	private String movieName, gender;
-	private int age, averageEda;
+	private String movieName, gender, age;
+	private double averageEda;
 	
-	public Movie(String movieName, String gender, int age, int averageEda) {
+	public Movie(String movieName, String gender, String age, double averageEda) {
 		this.movieName = movieName;
 		this.gender = gender;
 		this.age = age;
@@ -20,11 +20,11 @@ public class Movie {
 		return gender;
 	}
 
-	public int getAge() {
+	public String getAge() {
 		return age;
 	}
 
-	public int getAverageEda() {
+	public double getAverageEda() {
 		return averageEda;
 	}
 	

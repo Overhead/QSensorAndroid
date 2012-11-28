@@ -27,7 +27,6 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int add_movie_button=0x7f0a0005;
         public static final int agespinner=0x7f0a0008;
         public static final int community_button=0x7f0a0003;
         public static final int genderspinner=0x7f0a0007;
@@ -38,6 +37,7 @@ public final class R {
         public static final int my_movies_button=0x7f0a0002;
         public static final int new_movie_back_button=0x7f0a0006;
         public static final int new_movie_button=0x7f0a0001;
+        public static final int record_movie_button=0x7f0a0005;
         public static final int set_settings_button=0x7f0a0009;
         public static final int settings=0x7f0a000f;
         public static final int settings_back_button=0x7f0a000a;
@@ -73,6 +73,8 @@ public final class R {
         public static final int my_movies_button=0x7f040006;
         public static final int new_movie_button=0x7f040005;
         public static final int set_settings_button=0x7f040010;
+        public static final int start_movie_recording=0x7f040012;
+        public static final int stop_movie_recording=0x7f040013;
         public static final int title_activity_bluetooth=0x7f040011;
         public static final int title_activity_new_movie=0x7f04000b;
         public static final int title_activity_settings=0x7f04000f;
