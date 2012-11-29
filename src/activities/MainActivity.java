@@ -1,21 +1,33 @@
 package activities;
 
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.example.qsensorapp.R;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothServerSocket;
+import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import classes.Movie;
+import classes.QSensorBTDevice;
 import database.DBAdapter;
 
 public class MainActivity extends Activity {
@@ -27,6 +39,7 @@ public class MainActivity extends Activity {
 	public static String movieName = "";
 	public static List<Movie> moviesList = new ArrayList<Movie>();
 	TextView infoField;
+	
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,4 +132,6 @@ public class MainActivity extends Activity {
     	}
        
     }
+    
+   
 }
