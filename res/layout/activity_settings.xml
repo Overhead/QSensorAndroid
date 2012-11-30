@@ -17,13 +17,18 @@
             android:layout_marginTop="5dp"
             android:prompt="@string/gender_prompt" />
     
-        <Spinner
-            android:id="@+id/agespinner"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="5dp"
-            android:prompt="@string/age_prompt" />
+        
+        <EditText
+            android:id="@+id/ageTextField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="number" 
+            android:hint="Write your age">
 
+            <requestFocus />
+        </EditText>
+		
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

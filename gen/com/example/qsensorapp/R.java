@@ -27,7 +27,7 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int agespinner=0x7f0a0008;
+        public static final int ageTextField=0x7f0a0008;
         public static final int community_button=0x7f0a0003;
         public static final int genderspinner=0x7f0a0007;
         public static final int infoTextView=0x7f0a0000;

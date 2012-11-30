@@ -59,7 +59,7 @@ public class MainActivity extends Activity {
         }
          
         infoField = (TextView)findViewById(R.id.infoTextView);
-        infoField.setText(" Age-group: \n Gender: ");
+        infoField.setText(" Age: \n Gender: ");
         
         database.close();
     }
@@ -68,7 +68,7 @@ public class MainActivity extends Activity {
     protected void onResume() {
     	super.onResume();
     	 infoField = (TextView)findViewById(R.id.infoTextView);
-         infoField.setText(" Age-group: " + age + "\n Gender: " + gender );
+         infoField.setText(" Age: " + age + "\n Gender: " + gender );
     }
     
     @Override

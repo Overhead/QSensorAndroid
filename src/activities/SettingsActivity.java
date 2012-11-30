@@ -16,6 +16,8 @@ import android.widget.AdapterView.OnItemSelectedListener;
 
 public class SettingsActivity extends Activity {
 
+	EditText ageField;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -26,7 +28,7 @@ public class SettingsActivity extends Activity {
 	
 	public void setInterface(){
 		final Spinner genderSpinner = (Spinner)findViewById(R.id.genderspinner);
-		final Spinner ageSpinner = (Spinner)findViewById(R.id.agespinner);
+		//final Spinner ageSpinner = (Spinner)findViewById(R.id.agespinner);
 		
 		ArrayAdapter<CharSequence> genderAdapter = ArrayAdapter.createFromResource(
     			this, R.array.gender, android.R.layout.simple_spinner_item);
@@ -35,12 +37,7 @@ public class SettingsActivity extends Activity {
     	genderSpinner.setAdapter(genderAdapter);
     	genderSpinner.setOnItemSelectedListener(new MyOnItemSelectedListenerGender()); 
     	
-    	ArrayAdapter<CharSequence> ageAdapter = ArrayAdapter.createFromResource(
-    			this, R.array.age, android.R.layout.simple_spinner_item);
-    
-    	ageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    	ageSpinner.setAdapter(ageAdapter);
-    	ageSpinner.setOnItemSelectedListener(new MyOnItemSelectedListenerAge()); 
+    	ageField = (EditText)findViewById(R.id.ageTextField);
      	  	
 	}
 	
@@ -54,12 +51,14 @@ public class SettingsActivity extends Activity {
     	
     	//Start the showBooksActivity when show books button is clicked
     	case R.id.set_settings_button:
-    			if(MainActivity.gender.equals("N/A") || MainActivity.age.equals("N/A")){
+    		MainActivity.age = ageField.getText().toString();
+    			if(MainActivity.gender.equals("N/A") || MainActivity.age.equals("")){
     				Toast.makeText(getApplicationContext(), "You have to choose gender and age",
     	    				Toast.LENGTH_SHORT).show();
     			}
     			else
     				finish();
+    			
     	     break;
     	
     	 //Start the registerBooksAcitivty when register button is clicked

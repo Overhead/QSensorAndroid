@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -18,6 +19,7 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 
 import classes.Movie;
 
@@ -63,7 +65,7 @@ public class ServerCommunication {
 			pairs.add(new BasicNameValuePair("movie", movie.getMovieName()));
 			
 			if(!MainActivity.age.equalsIgnoreCase("n/a"))
-				pairs.add(new BasicNameValuePair("age", ""+10));
+				pairs.add(new BasicNameValuePair("age", movie.getAge()));
 			else
 				pairs.add(new BasicNameValuePair("age", "unknown"));
 			
@@ -76,8 +78,14 @@ public class ServerCommunication {
 			
 			httppost.setEntity(new UrlEncodedFormEntity(pairs));
 			
+			HttpEntity before = httppost.getEntity();
+			String beforetxt = EntityUtils.toString(before);
+			Log.i("Database", beforetxt);
 			httpClient.getConnectionManager();
 			HttpResponse response = httpClient.execute(httppost);
+			HttpEntity entity = response.getEntity();
+
+			String responseText = EntityUtils.toString(entity);
 			
 			if(response.getStatusLine().getStatusCode() == 200){
 				Log.i("Database", "Movie Name "+movie.getMovieName());
@@ -85,6 +93,7 @@ public class ServerCommunication {
 				Log.i("Database", "Gender: " + movie.getGender());
 				Log.i("Database", "Eda " +movie.getAverageEda());
 				Log.i("Database","Sent the movie to database");
+				Log.i("Database", responseText);
 			}
 			
 			
