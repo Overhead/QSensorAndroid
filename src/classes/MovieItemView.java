@@ -9,7 +9,11 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-
+/**
+ * Class that defines how each line in the list on "My Movies" page looks like
+ * @author Tjarb
+ *
+ */
 public class MovieItemView extends TextView {
 	
 	private Paint marginPaint;

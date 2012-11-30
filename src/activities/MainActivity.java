@@ -63,7 +63,9 @@ public class MainActivity extends Activity {
         
         database.close();
     }
-    
+    /**
+     * Handles what will happen when user return to main acticity
+     */
     @Override
     protected void onResume() {
     	super.onResume();
@@ -112,22 +114,23 @@ public class MainActivity extends Activity {
     	Intent myIntent;
     	switch(view.getId()) {
     	
-    	//Start the showBooksActivity when show books button is clicked
+    	//Move the user to "new movie" page
     	case R.id.new_movie_button:
     		 myIntent = new Intent(view.getContext(), NewMovieActivity.class);
     	     startActivity(myIntent);
     	     break;
     	
-    	 //Start the registerBooksAcitivty when register button is clicked
+    	 //Move the user to "My Movies" page
     	case R.id.my_movies_button:
     		myIntent = new Intent(view.getContext(), ShowMoviesActivity.class);
    	     	startActivity(myIntent);
    	     	break;
    	     
-   	    //Start the delteBookActivity when the show button(beneath delete) is clicked
+   	    //Does nothing at the moment
+   	    //TODO: Add functionality
     	case R.id.community_button:
-    		/*Toast.makeText(getApplicationContext(), "Community",
-    				Toast.LENGTH_SHORT).show();*/
+    		Toast.makeText(getApplicationContext(), "Community",
+    				Toast.LENGTH_SHORT).show();
    	     	break;
     	}
        

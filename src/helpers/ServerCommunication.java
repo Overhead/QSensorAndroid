@@ -59,7 +59,8 @@ public class ServerCommunication {
 		HttpPost httppost = new HttpPost(SERVER_IP+"/movie/movie/reception");
 
 		try{
-		
+			
+			//Add the movie parameters to post
 			List<NameValuePair> pairs = new ArrayList<NameValuePair>();
 			
 			pairs.add(new BasicNameValuePair("movie", movie.getMovieName()));
@@ -78,15 +79,20 @@ public class ServerCommunication {
 			
 			httppost.setEntity(new UrlEncodedFormEntity(pairs));
 			
+			//Prints out the post
 			HttpEntity before = httppost.getEntity();
 			String beforetxt = EntityUtils.toString(before);
 			Log.i("Database", beforetxt);
+			
+			//Do the post
 			httpClient.getConnectionManager();
 			HttpResponse response = httpClient.execute(httppost);
+			
+			//Prints out the result after post
 			HttpEntity entity = response.getEntity();
-
 			String responseText = EntityUtils.toString(entity);
 			
+			//If Post was OK
 			if(response.getStatusLine().getStatusCode() == 200){
 				Log.i("Database", "Movie Name "+movie.getMovieName());
 				Log.i("Database", "Age: " + movie.getAge());

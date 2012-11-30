@@ -15,7 +15,7 @@ public class StartNewAsyncTask extends AsyncTask<Integer, Void, Void>{
 		@Override
 		protected Void doInBackground(Integer... params) {
 
-			/** If first params is 1 SendCurrentUserPosition */
+			/** If first params is 1 Send movie to database */
 			if(params[0]==1){
 				ServerCommunication.SendMovieDataToDB(movie);
 			}

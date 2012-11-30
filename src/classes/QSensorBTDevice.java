@@ -1,5 +1,10 @@
 package classes;
 
+/**
+ * Class the representes the QSensor
+ * @author Tjarb
+ *
+ */
 public class QSensorBTDevice {
 	
 	String name;

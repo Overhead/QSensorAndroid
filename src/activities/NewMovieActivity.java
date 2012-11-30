@@ -1,6 +1,5 @@
 package activities;
 
-import helpers.ServerCommunication;
 import helpers.StartNewAsyncTask;
 
 import java.io.IOException;
@@ -52,6 +51,7 @@ public class NewMovieActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_movie);
 
+		//Initializes buttons
 		recordButton = (Button)findViewById(R.id.record_movie_button);
 		movieName = (EditText)findViewById(R.id.movieNameTextField);
 	}
@@ -60,9 +60,10 @@ public class NewMovieActivity extends Activity {
 	public void onClick(View view) {
 		switch (view.getId()) {
 
-		// Start the showBooksActivity when show books button is clicked
+		// Start the recording of the movie
 		case R.id.record_movie_button:
 
+			//Can't start recording if there is no movie name set
 			if(movieName.getText().toString().equals(""))
 				Toast.makeText(getApplicationContext(), "Add a movie name",Toast.LENGTH_SHORT).show();
 			else{
@@ -70,15 +71,16 @@ public class NewMovieActivity extends Activity {
 					StartbluetoothConnection();
 				}
 				else{
+					//When not recording stop bluetooth and send movie to database
 					stopBluetoothConnection();
 					recording = false;
-					SendMovieToDatabase(averageEda);
+					SendMovieToDatabase();
 					Toast.makeText(getApplicationContext(), "Movie added",Toast.LENGTH_SHORT).show();
 				}
 			}
 			break;
 
-			// Start the registerBooksAcitivty when register button is clicked
+			// Can't exit activity if recording is active
 		case R.id.new_movie_back_button:
 			if(recording)
 				Toast.makeText(getApplicationContext(), "You have to stop recording before you can exit",Toast.LENGTH_SHORT).show();
@@ -89,6 +91,9 @@ public class NewMovieActivity extends Activity {
 
 	}
 
+	/**
+	 * Override the back key button so that if there is a recording active, you can't exit the activity
+	 */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 	    if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -102,11 +107,17 @@ public class NewMovieActivity extends Activity {
 	    return super.onKeyDown(keyCode, event);
 	}
 	
+	/**
+	 * Starts a request and gives the user a dialog box that the application request to use bluetooth
+	 */
 	public void StartbluetoothConnection() {
 		startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE),
 				DISCOVERY_REQUEST);
 	}
 
+	/**
+	 * Stops the bluetooth connection
+	 */
 	public void stopBluetoothConnection(){
 
 		if(BluetoothAdapter.getDefaultAdapter().isEnabled()) {
@@ -118,6 +129,9 @@ public class NewMovieActivity extends Activity {
 		}
 	}
 
+	/**
+	 * Override the ActivityResult, used to handle the result of turning on bluetooth
+	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -126,6 +140,8 @@ public class NewMovieActivity extends Activity {
 		case DISCOVERY_REQUEST:
 			boolean bluetoothActivated = resultCode > 0;
 			int duration = resultCode;
+			
+			//If the user choose to activate bluetooth, start discovering of qsensor
 			if (bluetoothActivated){
 				MainActivity.movieName = movieName.getText().toString();
 				discover();
@@ -134,6 +150,9 @@ public class NewMovieActivity extends Activity {
 
 	}	
 	
+	/**
+	 * Method that discover nearby bluetooth devices
+	 */
 	private void discover() {
 
 		// Broadcastreceiver for start and stop of search:
@@ -142,6 +161,7 @@ public class NewMovieActivity extends Activity {
 			String dFinished = BluetoothAdapter.ACTION_DISCOVERY_FINISHED;
 			@Override
 			public void onReceive(Context context, Intent intent) {
+				
 				if (dStarted.equals(intent.getAction())) {
 					// Discovery has started.
 					Toast.makeText(getApplicationContext(),
@@ -150,6 +170,7 @@ public class NewMovieActivity extends Activity {
 					// Discovery has completed.
 					Toast.makeText(getApplicationContext(),
 							"Discovery Completed...", Toast.LENGTH_SHORT).show();
+					
 					//Stop the discovery process, is needed to be able to connect
 					bluetooth.cancelDiscovery();
 
@@ -157,7 +178,7 @@ public class NewMovieActivity extends Activity {
 					unregisterReceiver(discoveryMonitor);
 					unregisterReceiver(discoveryResult);
 
-					//Set up connection
+					//Set up connection to QSensor
 					connectToDevice();
 				}
 			}
@@ -166,6 +187,7 @@ public class NewMovieActivity extends Activity {
 				BluetoothAdapter.ACTION_DISCOVERY_STARTED));
 		this.registerReceiver(discoveryMonitor, new IntentFilter(
 				BluetoothAdapter.ACTION_DISCOVERY_FINISHED));
+		
 		// Broadcasting for discovered devices:
 		discoveryResult = new BroadcastReceiver() {
 			@Override
@@ -177,9 +199,10 @@ public class NewMovieActivity extends Activity {
 				Toast.makeText(getApplicationContext(),
 						"Discovered: " + remoteDeviceName + "\nAddress: " + remoteDevice, Toast.LENGTH_SHORT)
 						.show();
+				
+				//Create QSensor object if the QSensor given by name is found in the discovery process
 				if(remoteDeviceName.toString().equalsIgnoreCase(QSensorName))
 					qSensor = new QSensorBTDevice(remoteDeviceName, remoteDevice.getAddress());
-				// TODO Do something with the remote Bluetooth Device.
 			}
 		};
 		registerReceiver(discoveryResult, new IntentFilter(
@@ -189,9 +212,12 @@ public class NewMovieActivity extends Activity {
 	}
 
 	
-	
+	/**
+	 * Method that connects Android phone to the Qsensor
+	 */
 	public void connectToDevice() {
 
+		//If the QSensor object, that will be created in the discovery process is null, the sensor was not found
 		if (qSensor != null) {
 			try {
 
@@ -201,21 +227,25 @@ public class NewMovieActivity extends Activity {
 								+ qSensor.getAddress(), Toast.LENGTH_SHORT)
 								.show();
 
-				BluetoothAdapter bluetooth = BluetoothAdapter
-						.getDefaultAdapter();
+				//BluetoothAdapter bluetooth = BluetoothAdapter.getDefaultAdapter();
 
+				//Get the QSensor device
 				BluetoothDevice device = bluetooth.getRemoteDevice(qSensor.getAddress());
 
+				//Initiate the connection to device
 				Method m = device.getClass().getMethod("createRfcommSocket", new Class[] {int.class});
 				BluetoothSocket clientSocket = (BluetoothSocket) m.invoke(device, 1);
 
+				//Connect to the sensor
 				clientSocket.connect();
-				// TODO Transfer data using the Bluetooth Socket
+				
+				//When connected, start data transfer
 				if(clientSocket.isConnected()){
 					receiveQSensorData(clientSocket);
 				}
 
 			} catch (Exception e) {
+				//If connection failed, disable bluetooth
 				bluetooth.disable();
 				Toast.makeText(getApplicationContext(),
 						"Connection to " + qSensor.getName() + " failed.",
@@ -223,6 +253,8 @@ public class NewMovieActivity extends Activity {
 				Log.d("BLUETOOTH", e.getMessage());
 			} 
 		} else {
+			
+			//If the Qsensor object is null
 			Toast.makeText(getApplicationContext(), "Qsensor not found",
 					Toast.LENGTH_SHORT).show();
 			bluetooth.disable();
@@ -230,11 +262,13 @@ public class NewMovieActivity extends Activity {
 	}
 
 	/**
-	 * TODO: Set up Bluetooth pairing to QSensor, and handle data
+	 * Method that takes the QSensor client, and start receiving the data it transmits
+	 * TODO: Handle QSensor data
 	 * @throws IOException 
 	 */
 	public void receiveQSensorData(BluetoothSocket clientSocket) throws IOException{
 
+		//Creates a new thread for receiving data from QSensor
 		final BluetoothSocket client = clientSocket;
 		Thread readQsensorData = new Thread(new Runnable() {
 		public void run() {
@@ -245,19 +279,14 @@ public class NewMovieActivity extends Activity {
 				
 				while (client.isConnected() && scan.hasNextLine()) {
 					String line = scan.nextLine();
-		
 					Log.i("QSensor", line);
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
 		}});
 		readQsensorData.start();
-
-		//List<String> qsensorData = new ArrayList<String>();
-
 
 		recordButton.setText("Stop recording");	
 		recording = true;
@@ -276,14 +305,19 @@ public class NewMovieActivity extends Activity {
 
 	}
 
-	public void SendMovieToDatabase(double eda){
+	/**
+	 * Method that send the recorded data on a movie to the PhpAdmin Database aswell as the phones database
+	 * @param eda
+	 */
+	public void SendMovieToDatabase(){
+		
 		Movie m = new Movie(MainActivity.movieName, MainActivity.gender, MainActivity.age,averageEda);
-
 		database = new DBAdapter(this);
 		database.open();
 
 		database.insertEntry(m);
 
+		//Refresh the lit in the "My Movies" page
 		if(!database.getAllMovies().isEmpty()) {
 			MainActivity.moviesList.clear();
 			for(Movie movie : database.getAllMovies())
@@ -292,10 +326,11 @@ public class NewMovieActivity extends Activity {
 
 		database.close();
 
-		//TODO: Fix Server ip address before trying to use this
+		//Start a new AsyncTask that sends movie to PhpAdmin database
 		StartNewAsyncTask sendMovie = new StartNewAsyncTask(m);
 		sendMovie.execute(1);
 
+		//Reset AverageEda
 		averageEda = 0;
 	}
 
