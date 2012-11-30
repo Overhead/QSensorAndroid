@@ -1,9 +1,10 @@
 package activities;
 
-import java.io.BufferedReader;
+import helpers.ServerCommunication;
+import helpers.StartNewAsyncTask;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,10 +92,12 @@ public class NewMovieActivity extends Activity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 	    if (keyCode == KeyEvent.KEYCODE_BACK) {
-	        if(recording)
+	        if(recording){
+	        	Toast.makeText(getApplicationContext(), "You have to stop recording before you can exit",Toast.LENGTH_SHORT).show();
 	        	return false;
+	        }
 	        else
-	        	return true;
+	        	finish();
 	    }
 	    return super.onKeyDown(keyCode, event);
 	}
@@ -290,7 +293,8 @@ public class NewMovieActivity extends Activity {
 		database.close();
 
 		//TODO: Fix Server ip address before trying to use this
-		//ServerCommunication.SendMovieDataToDB(m);
+		StartNewAsyncTask sendMovie = new StartNewAsyncTask(m);
+		sendMovie.execute(1);
 
 		averageEda = 0;
 	}
