@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -37,14 +38,17 @@ public class NewMovieActivity extends Activity {
 	EditText movieName;
 	Button recordButton;
 	boolean recording;
-	double averageEda = 0;
 	private DBAdapter database;
 	final int DISCOVERY_REQUEST = 0;
 	QSensorBTDevice qSensor;
 	final String QSensorName = "affectivaQ-v2-7d5c";
-	final BluetoothAdapter bluetooth = BluetoothAdapter.getDefaultAdapter();
+	BluetoothAdapter bluetooth;
 	BroadcastReceiver discoveryMonitor;
 	BroadcastReceiver discoveryResult;
+
+	double averageEda = 0;
+	double averageBaseEDA = 0;
+	LinkedList<Emotion> movieEmotions;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,9 @@ public class NewMovieActivity extends Activity {
 		//Initializes buttons
 		recordButton = (Button)findViewById(R.id.record_movie_button);
 		movieName = (EditText)findViewById(R.id.movieNameTextField);
+		
+		movieEmotions = new LinkedList<Emotion>();
+		bluetooth = BluetoothAdapter.getDefaultAdapter();
 	}
 
 	// Define what each button shall do
@@ -276,10 +283,30 @@ public class NewMovieActivity extends Activity {
 			try {
 				input = client.getInputStream();
 				Scanner scan = new Scanner(input);
-				
+				String line;
+				int counter = 1;
+				Emotion emo;
 				while (client.isConnected() && scan.hasNextLine()) {
-					String line = scan.nextLine();
+					line = scan.nextLine();
+					
+					String[] results = line.split( ",\\s*" );
+					
 					Log.i("QSensor", line);
+					
+					
+					//Get a base EDA value
+					if(counter <= 20)
+					{
+						averageBaseEDA += Double.parseDouble(results[5]);
+						averageBaseEDA /= counter;
+					}else{
+						//Get movie EDA
+						movieEmotions.add(emo = new Emotion(Double.parseDouble(results[5])));
+						averageEda += Double.parseDouble(results[5]);
+						averageEda /= movieEmotions.size();
+					}
+					
+					counter++;
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -290,19 +317,6 @@ public class NewMovieActivity extends Activity {
 
 		recordButton.setText("Stop recording");	
 		recording = true;
-
-		List<Emotion> emotionsForMovie = new ArrayList<Emotion>();
-
-		//While we receive data emotion objects is added
-		Emotion e = new Emotion(5.0, 0.42, 0.89, 3.98, 36.4, 0.546);
-		emotionsForMovie.add(e);
-
-		for(Emotion emotion : emotionsForMovie) {
-			averageEda += emotion.getEDA();
-		}
-
-		averageEda /= emotionsForMovie.size();
-
 	}
 
 	/**

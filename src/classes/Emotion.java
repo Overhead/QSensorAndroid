@@ -17,6 +17,10 @@ public class Emotion {
 		this.celsius = celsius;
 		this.EDA = EDA;
 	}
+	
+	public Emotion(double EDA){
+		this.EDA = EDA;
+	}
 
 	public double getzAxis() {
 		return zAxis;
@@ -42,6 +46,11 @@ public class Emotion {
 		return EDA;
 	}
 	
-	
+	public String toString(){
+		String re = "";
+		re = "EDA: " + EDA;
+		
+		return re;
+	}
 
 }
