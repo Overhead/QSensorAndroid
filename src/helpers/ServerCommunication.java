@@ -2,6 +2,8 @@ package helpers;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -29,8 +32,11 @@ import android.util.Log;
 
 public class ServerCommunication {
 	
+	/** A given timeout used when connecting to the server */
+	private static final int TIMEOUT = 50000;
+	
 	/** What ip has the Server */
-	public static String SERVER_IP="http://130.240.99.19";
+	public static String SERVER_IP="http://130.240.96.142";
 	/**
 	 * Set the current serverIP
 	 * @param serverIP
@@ -48,11 +54,11 @@ public class ServerCommunication {
 		HttpParams httpParams = new BasicHttpParams();
 		// Set the timeout in milliseconds until a connection is established.
 		// The default value is zero, that means the timeout is not used. 
-		int timeoutConnection = 50000;
+		int timeoutConnection = TIMEOUT;
 		HttpConnectionParams.setConnectionTimeout(httpParams, timeoutConnection);
 		// Set the timeout in milliseconds until a connection is established.
 		// The default value is zero, that means the timeout is not used. 
-		int timeoutSocket = 50000;
+		int timeoutSocket = TIMEOUT;
 		HttpConnectionParams.setSoTimeout(httpParams, timeoutSocket);
 		
 		HttpClient httpClient = new DefaultHttpClient(httpParams);
@@ -110,6 +116,50 @@ public class ServerCommunication {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static List<Movie> getCommunityMovieXML(String gender, String age){
+		List<Movie> communityMovies = new ArrayList<Movie>();
+		
+		HttpParams httpParams = new BasicHttpParams();
+		// Set the timeout in milliseconds until a connection is established.
+		// The default value is zero, that means the timeout is not used. 
+		int timeoutConnection = TIMEOUT;
+		HttpConnectionParams.setConnectionTimeout(httpParams, timeoutConnection);
+		// Set the timeout in milliseconds until a connection is established.
+		// The default value is zero, that means the timeout is not used. 
+		int timeoutSocket = TIMEOUT;
+		HttpConnectionParams.setSoTimeout(httpParams, timeoutSocket);
+		HttpClient httpClient = new DefaultHttpClient(httpParams);
+
+		try {
+			String url;
+			if(gender.equalsIgnoreCase("male"))
+				url = SERVER_IP+"/movie/movie/request?age="+age+"&gender=M";
+			else
+				url = SERVER_IP+"/movie/movie/request?age="+age+"&gender=F";
+					
+
+			HttpGet method = new HttpGet(new URI(url));
+			HttpResponse response = httpClient.execute(method);
+			httpClient.getConnectionManager().closeExpiredConnections();
+
+			HttpEntity entity = response.getEntity();
+			String responseText = EntityUtils.toString(entity);
+
+			communityMovies = ParseXMLStringToList.getMoviesForAgeAndGender(responseText, gender, age);
+			
+			return communityMovies;
+
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return communityMovies;
 	}
 	
 }

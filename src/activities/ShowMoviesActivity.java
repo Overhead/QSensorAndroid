@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +21,6 @@ public class ShowMoviesActivity extends Activity {
 	ArrayList<String> moviesList = new ArrayList<String>(); 
 	ArrayAdapter<String> aa;
 	ListView moviesListView;
-	ImageButton refreshButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,13 +73,13 @@ public class ShowMoviesActivity extends Activity {
 			 Intent myIntent;
 			switch (view.getId()) {
 
-			// Start the showBooksActivity when show books button is clicked
+			// Starts the "new movie" intent
 			case R.id.show_new_movie_button:				
 				  myIntent = new Intent(view.getContext(), NewMovieActivity.class); 
-				  startActivityForResult(myIntent, 0);				 
+				  startActivity(myIntent);				 
 				break;
 				
-			// Start the registerBooksAcitivty when register button is clicked
+			// Closes the activity and return to previous
 			case R.id.show_movie_back_button:
 				finish();
 				break;

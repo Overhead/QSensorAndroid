@@ -19,5 +19,8 @@
     <string name="title_activity_bluetooth">BluetoothActivity</string>
     <string name="start_movie_recording">Start recording</string>
     <string name="stop_movie_recording">Stop recording</string>
+    <string name="title_activity_comunity">ComunityActivity</string>
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
 
 </resources>

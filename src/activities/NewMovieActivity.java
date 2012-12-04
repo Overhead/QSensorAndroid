@@ -297,13 +297,11 @@ public class NewMovieActivity extends Activity {
 					//Get a base EDA value
 					if(counter <= 20)
 					{
-						averageBaseEDA += Double.parseDouble(results[5]);
-						averageBaseEDA /= counter;
+						averageBaseEDA += Double.parseDouble(results[6]);					
 					}else{
 						//Get movie EDA
-						movieEmotions.add(emo = new Emotion(Double.parseDouble(results[5])));
-						averageEda += Double.parseDouble(results[5]);
-						averageEda /= movieEmotions.size();
+						movieEmotions.add(emo = new Emotion(Double.parseDouble(results[6])));
+						averageEda += Double.parseDouble(results[6]);
 					}
 					
 					counter++;
@@ -325,7 +323,16 @@ public class NewMovieActivity extends Activity {
 	 */
 	public void SendMovieToDatabase(){
 		
-		Movie m = new Movie(MainActivity.movieName, MainActivity.gender, MainActivity.age,averageEda);
+		averageBaseEDA /= 20;
+		averageEda /= movieEmotions.size();
+		double movieEDA = 0;
+		movieEDA = (averageEda - averageBaseEDA);
+		Log.i("SensorResult", "EmotionList size: " + movieEmotions.size());
+		Log.i("SensorResult", "AverageMovie: " + averageEda);
+		Log.i("SensorResult", "AverageBase: "+ averageBaseEDA);
+		Log.i("SensorResult", "Sending EDA to DB: "+movieEDA);
+		
+		Movie m = new Movie(MainActivity.movieName, MainActivity.gender, MainActivity.age,movieEDA);
 		database = new DBAdapter(this);
 		database.open();
 
@@ -346,6 +353,7 @@ public class NewMovieActivity extends Activity {
 
 		//Reset AverageEda
 		averageEda = 0;
+		averageBaseEDA = 0;
 	}
 
 	
