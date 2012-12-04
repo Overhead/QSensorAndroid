@@ -129,8 +129,10 @@ public class MainActivity extends Activity {
    	    //Does nothing at the moment
    	    //TODO: Add functionality
     	case R.id.community_button:
-    		Toast.makeText(getApplicationContext(), "Community",
-    				Toast.LENGTH_SHORT).show();
+    		/*Toast.makeText(getApplicationContext(), "Community",
+    				Toast.LENGTH_SHORT).show();*/
+    		myIntent = new Intent(view.getContext(), CommunityActivity.class);
+   	     	startActivity(myIntent);
    	     	break;
     	}
        

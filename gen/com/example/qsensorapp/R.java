@@ -27,26 +27,28 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int ageTextField=0x7f0a000c;
-        public static final int communityAgeField=0x7f0a0002;
-        public static final int communityMoviesList=0x7f0a0003;
-        public static final int community_button=0x7f0a0007;
-        public static final int genderspinner=0x7f0a000b;
-        public static final int infoTextView=0x7f0a0004;
-        public static final int menu_settings=0x7f0a0012;
-        public static final int movieNameTextField=0x7f0a0008;
-        public static final int moviesListView=0x7f0a0011;
-        public static final int my_movies_button=0x7f0a0006;
-        public static final int new_movie_back_button=0x7f0a000a;
-        public static final int new_movie_button=0x7f0a0005;
-        public static final int radioButtonFemale=0x7f0a0001;
-        public static final int radioButtonMale=0x7f0a0000;
-        public static final int record_movie_button=0x7f0a0009;
-        public static final int set_settings_button=0x7f0a000d;
-        public static final int settings=0x7f0a0013;
-        public static final int settings_back_button=0x7f0a000e;
-        public static final int show_movie_back_button=0x7f0a0010;
-        public static final int show_new_movie_button=0x7f0a000f;
+        public static final int ageTextField=0x7f0a000e;
+        public static final int communityAgeField=0x7f0a0003;
+        public static final int communityMoviesList=0x7f0a0005;
+        public static final int communitySearchButton=0x7f0a0004;
+        public static final int community_button=0x7f0a0009;
+        public static final int community_radio_group=0x7f0a0000;
+        public static final int genderspinner=0x7f0a000d;
+        public static final int infoTextView=0x7f0a0006;
+        public static final int menu_settings=0x7f0a0014;
+        public static final int movieNameTextField=0x7f0a000a;
+        public static final int moviesListView=0x7f0a0013;
+        public static final int my_movies_button=0x7f0a0008;
+        public static final int new_movie_back_button=0x7f0a000c;
+        public static final int new_movie_button=0x7f0a0007;
+        public static final int radioButtonFemale=0x7f0a0002;
+        public static final int radioButtonMale=0x7f0a0001;
+        public static final int record_movie_button=0x7f0a000b;
+        public static final int set_settings_button=0x7f0a000f;
+        public static final int settings=0x7f0a0015;
+        public static final int settings_back_button=0x7f0a0010;
+        public static final int show_movie_back_button=0x7f0a0012;
+        public static final int show_new_movie_button=0x7f0a0011;
     }
     public static final class layout {
         public static final int activity_comunity=0x7f030000;
@@ -80,6 +82,7 @@ public final class R {
         public static final int movieName_hint=0x7f04000c;
         public static final int my_movies_button=0x7f040006;
         public static final int new_movie_button=0x7f040005;
+        public static final int searchButton=0x7f040017;
         public static final int set_settings_button=0x7f040010;
         public static final int start_movie_recording=0x7f040012;
         public static final int stop_movie_recording=0x7f040013;

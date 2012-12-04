@@ -15,25 +15,22 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
-
-import classes.Movie;
 
 import activities.MainActivity;
 import android.util.Log;
+import classes.Movie;
 
 
 public class ServerCommunication {
 	
 	/** A given timeout used when connecting to the server */
-	private static final int TIMEOUT = 50000;
+	private static final int TIMEOUT = 5000;
 	
 	/** What ip has the Server */
 	public static String SERVER_IP="http://130.240.96.142";
@@ -118,7 +115,7 @@ public class ServerCommunication {
 		}
 	}
 	
-	public static List<Movie> getCommunityMovieXML(String gender, String age){
+	public static List<Movie> getCommunityMovies(String gender, String age){
 		List<Movie> communityMovies = new ArrayList<Movie>();
 		
 		HttpParams httpParams = new BasicHttpParams();
@@ -134,16 +131,17 @@ public class ServerCommunication {
 
 		try {
 			String url;
+			//Formats url 
 			if(gender.equalsIgnoreCase("male"))
 				url = SERVER_IP+"/movie/movie/request?age="+age+"&gender=M";
 			else
 				url = SERVER_IP+"/movie/movie/request?age="+age+"&gender=F";
 					
 
-			HttpGet method = new HttpGet(new URI(url));
-			HttpResponse response = httpClient.execute(method);
+			Log.i("Database", url);
+			HttpResponse response = httpClient.execute(new HttpGet(url));
 			httpClient.getConnectionManager().closeExpiredConnections();
-
+	
 			HttpEntity entity = response.getEntity();
 			String responseText = EntityUtils.toString(entity);
 
@@ -151,8 +149,6 @@ public class ServerCommunication {
 			
 			return communityMovies;
 
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

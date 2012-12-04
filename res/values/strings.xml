@@ -22,5 +22,6 @@
     <string name="title_activity_comunity">ComunityActivity</string>
     <string name="gender_male">Male</string>
     <string name="gender_female">Female</string>
+    <string name="searchButton">Search</string>
 
 </resources>

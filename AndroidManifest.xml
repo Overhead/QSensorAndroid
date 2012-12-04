@@ -40,7 +40,7 @@
             android:label="@string/title_activity_settings" >
         </activity>
         <activity
-            android:name="com.example.qsensorapp.ComunityActivity"
+            android:name="activities.CommunityActivity"
             android:label="@string/title_activity_comunity" >
         </activity>
     </application>
