@@ -7,7 +7,7 @@ public class Emotion {
 	  Z-axis,Y-axis,X-axis,Battery,∞Celsius,EDA(uS)
 	 * */
 	
-	private double zAxis,yAxis,xAxis, battery, celsius, EDA;
+	private double zAxis,yAxis,xAxis, battery, celsius, EDA, time;
 	
 	public Emotion(double zAxis, double yAxis, double xAxis, double battery, double celsius, double EDA){
 		this.zAxis = zAxis;
@@ -18,10 +18,14 @@ public class Emotion {
 		this.EDA = EDA;
 	}
 	
-	public Emotion(double EDA){
+	public Emotion(double EDA, double time){
 		this.EDA = EDA;
+		this.time = time;
 	}
 
+	public double getTime(){
+		return time;
+	}
 	public double getzAxis() {
 		return zAxis;
 	}

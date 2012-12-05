@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Scanner;
 
 import android.app.Activity;
@@ -19,17 +18,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import classes.Emotion;
 import classes.Movie;
 import classes.QSensorBTDevice;
 
 import com.example.qsensorapp.R;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.GraphViewSeries;
+import com.jjoe64.graphview.LineGraphView;
 
 import database.DBAdapter;
 
@@ -45,7 +50,8 @@ public class NewMovieActivity extends Activity {
 	BluetoothAdapter bluetooth;
 	BroadcastReceiver discoveryMonitor;
 	BroadcastReceiver discoveryResult;
-
+	LinearLayout layout;
+	GraphView graphView;
 	double averageEda = 0;
 	double averageBaseEDA = 0;
 	LinkedList<Emotion> movieEmotions;
@@ -61,8 +67,42 @@ public class NewMovieActivity extends Activity {
 		
 		movieEmotions = new LinkedList<Emotion>();
 		bluetooth = BluetoothAdapter.getDefaultAdapter();
+		graphView = new LineGraphView(this, "GraphViewDemo");
+		layout = (LinearLayout) findViewById(R.id.linearLGraph);
 	}
 
+	public void drawGraph(LinkedList<Emotion> emotions){
+		try {
+			if (!emotions.isEmpty()) {
+				double time = 0;
+				ArrayList<GraphViewData> grapData = new ArrayList<GraphViewData>();
+				for (int i = 0; i < emotions.size(); i++) {
+					grapData.add(new GraphViewData(emotions.get(i).getTime(),emotions.get(i).getEDA()));
+
+				}
+				time = emotions.get(emotions.size() - 1).getTime();
+				Log.i("Graph", "Time: " + time);
+
+				// add data
+				graphView.addSeries(new GraphViewSeries(grapData.toArray(new GraphViewData[0])));
+
+				// set view port, start=2, size=40
+				if (time < 60)
+					graphView.setViewPort(0, time);
+				else if (time < 600)
+					graphView.setViewPort(0, time / 2);
+				else
+					graphView.setViewPort(0, time / 4);
+
+				graphView.setScrollable(true);
+				layout.addView(graphView);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+	
 	// Define what each button shall do
 	public void onClick(View view) {
 		switch (view.getId()) {
@@ -286,9 +326,10 @@ public class NewMovieActivity extends Activity {
 				String line;
 				int counter = 1;
 				Emotion emo;
+				double timeElapsed;
+				double startTime = 0;
 				while (client.isConnected() && scan.hasNextLine()) {
 					line = scan.nextLine();
-					
 					String[] results = line.split( ",\\s*" );
 					
 					Log.i("QSensor", line);
@@ -299,8 +340,12 @@ public class NewMovieActivity extends Activity {
 					{
 						averageBaseEDA += Double.parseDouble(results[6]);					
 					}else{
-						//Get movie EDA
-						movieEmotions.add(emo = new Emotion(Double.parseDouble(results[6])));
+						//Get movie EDA, here we can remove the actual Emotion object
+						if(counter == 21)
+							startTime = SystemClock.elapsedRealtime();
+						
+						timeElapsed = (SystemClock.elapsedRealtime() - startTime)/1000;
+						movieEmotions.add(emo = new Emotion(Double.parseDouble(results[6]), timeElapsed));
 						averageEda += Double.parseDouble(results[6]);
 					}
 					
@@ -347,6 +392,8 @@ public class NewMovieActivity extends Activity {
 
 		database.close();
 
+		drawGraph(movieEmotions);
+		
 		//Start a new AsyncTask that sends movie to PhpAdmin database
 		StartNewAsyncTask sendMovie = new StartNewAsyncTask(m);
 		sendMovie.execute(1);

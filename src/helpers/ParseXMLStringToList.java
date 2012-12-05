@@ -31,8 +31,8 @@ public class ParseXMLStringToList {
 			Element e = (Element)nodes.item(i);
 			
 			m.setMovieName(XMLFunctions.getValue(e, "nameFilm"));
-			m.setAge(XMLFunctions.getValue(e, age));
-			m.setGender(XMLFunctions.getValue(e, gender));
+			m.setAge(age);
+			m.setGender(gender);
 			m.setAverageEda(Double.parseDouble(XMLFunctions.getValue(e, "EmoLvl")));
 			
 			movieList.add(m);
