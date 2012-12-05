@@ -23,5 +23,8 @@
     <string name="gender_male">Male</string>
     <string name="gender_female">Female</string>
     <string name="searchButton">Search</string>
+    <string name="searchImdb">Search in IMDB</string>
+    <string name="title_activity_find_movie">FindMovieActivity</string>
+    <string name="nothing_added">N/A</string>
 
 </resources>

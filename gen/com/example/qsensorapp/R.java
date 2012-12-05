@@ -28,46 +28,50 @@ public final class R {
         public static final int icon=0x7f020001;
     }
     public static final class id {
-        public static final int ageTextField=0x7f0a000f;
+        public static final int ageTextField=0x7f0a0011;
         public static final int communityAgeField=0x7f0a0003;
         public static final int communityMoviesList=0x7f0a0005;
         public static final int communitySearchButton=0x7f0a0004;
-        public static final int community_button=0x7f0a0009;
+        public static final int community_button=0x7f0a000c;
         public static final int community_radio_group=0x7f0a0000;
-        public static final int genderspinner=0x7f0a000e;
-        public static final int infoTextView=0x7f0a0006;
-        public static final int linearLGraph=0x7f0a000d;
-        public static final int menu_settings=0x7f0a0015;
-        public static final int movieNameTextField=0x7f0a000a;
-        public static final int moviesListView=0x7f0a0014;
-        public static final int my_movies_button=0x7f0a0008;
-        public static final int new_movie_back_button=0x7f0a000c;
-        public static final int new_movie_button=0x7f0a0007;
+        public static final int genderspinner=0x7f0a0010;
+        public static final int imdbMoviesListView=0x7f0a0008;
+        public static final int infoTextView=0x7f0a0009;
+        public static final int linearLGraph=0x7f0a000f;
+        public static final int menu_settings=0x7f0a0017;
+        public static final int movieNameTextField=0x7f0a0006;
+        public static final int moviesListView=0x7f0a0016;
+        public static final int my_movies_button=0x7f0a000b;
+        public static final int new_movie_back_button=0x7f0a000e;
+        public static final int new_movie_button=0x7f0a000a;
         public static final int radioButtonFemale=0x7f0a0002;
         public static final int radioButtonMale=0x7f0a0001;
-        public static final int record_movie_button=0x7f0a000b;
-        public static final int set_settings_button=0x7f0a0010;
-        public static final int settings=0x7f0a0016;
-        public static final int settings_back_button=0x7f0a0011;
-        public static final int show_movie_back_button=0x7f0a0013;
-        public static final int show_new_movie_button=0x7f0a0012;
+        public static final int record_movie_button=0x7f0a000d;
+        public static final int search_imdb_button=0x7f0a0007;
+        public static final int set_settings_button=0x7f0a0012;
+        public static final int settings=0x7f0a0018;
+        public static final int settings_back_button=0x7f0a0013;
+        public static final int show_movie_back_button=0x7f0a0015;
+        public static final int show_new_movie_button=0x7f0a0014;
     }
     public static final class layout {
         public static final int activity_comunity=0x7f030000;
-        public static final int activity_main=0x7f030001;
-        public static final int activity_new_movie=0x7f030002;
-        public static final int activity_settings=0x7f030003;
-        public static final int activity_show_movies=0x7f030004;
-        public static final int list_item=0x7f030005;
-        public static final int main=0x7f030006;
+        public static final int activity_find_movie=0x7f030001;
+        public static final int activity_main=0x7f030002;
+        public static final int activity_new_movie=0x7f030003;
+        public static final int activity_settings=0x7f030004;
+        public static final int activity_show_movies=0x7f030005;
+        public static final int list_item=0x7f030006;
+        public static final int main=0x7f030007;
     }
     public static final class menu {
         public static final int activity_comunity=0x7f090000;
-        public static final int activity_main=0x7f090001;
-        public static final int activity_new_movie=0x7f090002;
-        public static final int activity_settings=0x7f090003;
-        public static final int activity_show_movies=0x7f090004;
-        public static final int menu=0x7f090005;
+        public static final int activity_find_movie=0x7f090001;
+        public static final int activity_main=0x7f090002;
+        public static final int activity_new_movie=0x7f090003;
+        public static final int activity_settings=0x7f090004;
+        public static final int activity_show_movies=0x7f090005;
+        public static final int menu=0x7f090006;
     }
     public static final class string {
         public static final int add_movie_button=0x7f04000a;
@@ -86,12 +90,15 @@ public final class R {
         public static final int movieName_hint=0x7f04000d;
         public static final int my_movies_button=0x7f040007;
         public static final int new_movie_button=0x7f040006;
+        public static final int nothing_added=0x7f04001b;
         public static final int searchButton=0x7f040018;
+        public static final int searchImdb=0x7f040019;
         public static final int set_settings_button=0x7f040011;
         public static final int start_movie_recording=0x7f040013;
         public static final int stop_movie_recording=0x7f040014;
         public static final int title_activity_bluetooth=0x7f040012;
         public static final int title_activity_comunity=0x7f040015;
+        public static final int title_activity_find_movie=0x7f04001a;
         public static final int title_activity_new_movie=0x7f04000c;
         public static final int title_activity_settings=0x7f040010;
         public static final int title_activity_show_movies=0x7f04000b;

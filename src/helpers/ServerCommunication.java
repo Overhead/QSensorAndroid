@@ -67,6 +67,7 @@ public class ServerCommunication {
 			List<NameValuePair> pairs = new ArrayList<NameValuePair>();
 			
 			pairs.add(new BasicNameValuePair("movie", movie.getMovieName()));
+			pairs.add(new BasicNameValuePair("imdbId", movie.getImdbId()));
 			
 			if(!MainActivity.age.equalsIgnoreCase("n/a"))
 				pairs.add(new BasicNameValuePair("age", movie.getAge()));
@@ -157,6 +158,46 @@ public class ServerCommunication {
 		}
 
 		return communityMovies;
+	}
+	
+	
+	public static List<Movie> getIMDBMovies(String movieName){
+		List<Movie> imdbMovies = new ArrayList<Movie>();
+		
+		HttpParams httpParams = new BasicHttpParams();
+		// Set the timeout in milliseconds until a connection is established.
+		// The default value is zero, that means the timeout is not used. 
+		int timeoutConnection = TIMEOUT;
+		HttpConnectionParams.setConnectionTimeout(httpParams, timeoutConnection);
+		// Set the timeout in milliseconds until a connection is established.
+		// The default value is zero, that means the timeout is not used. 
+		int timeoutSocket = TIMEOUT;
+		HttpConnectionParams.setSoTimeout(httpParams, timeoutSocket);
+		HttpClient httpClient = new DefaultHttpClient(httpParams);
+
+		try {
+			String url;
+			url = SERVER_IP+"/movie/movie/imdbCheck?movie="+movieName;
+					
+
+			Log.i("Database", url);
+			HttpResponse response = httpClient.execute(new HttpGet(url));
+			httpClient.getConnectionManager().closeExpiredConnections();
+	
+			HttpEntity entity = response.getEntity();
+			String responseText = EntityUtils.toString(entity);
+			Log.i("Database", responseText);
+			imdbMovies = ParseXMLStringToList.getMoviesFromImdbXMLByName(responseText, movieName);
+			
+			return imdbMovies;
+
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return imdbMovies;
 	}
 	
 }

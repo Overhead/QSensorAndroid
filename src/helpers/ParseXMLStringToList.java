@@ -42,6 +42,31 @@ public class ParseXMLStringToList {
 		return movieList;
 	}
 	
+	public static List<Movie> getMoviesFromImdbXMLByName(String xml, String movieName){
+		List<Movie> movieList = new ArrayList<Movie>();
+		
+		Document xmlDocument = XMLfromString(xml);
+		
+		NodeList nodes = xmlDocument.getElementsByTagName("item");
+		
+		for(int i=0; i<nodes.getLength();i++){
+			Movie m = new Movie();
+			Element e = (Element)nodes.item(i);
+			
+			m.setMovieName(XMLFunctions.getValue(e, "title"));
+			m.setAge("0");
+			m.setAverageEda(0);
+			m.setGender("N/A");
+			m.setProductionYear(Integer.parseInt((XMLFunctions.getValue(e, "year"))));
+			m.setImdbId(XMLFunctions.getValue(e, "imdbId"));
+			
+			movieList.add(m);
+			
+		}
+
+		return movieList;
+	}
+	
 	public static Document XMLfromString(String xml){
 
 		Document doc = null;
