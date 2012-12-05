@@ -1,45 +1,31 @@
 package activities;
 
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
-import com.example.qsensorapp.R;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothServerSocket;
-import android.bluetooth.BluetoothSocket;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 import classes.Movie;
-import classes.QSensorBTDevice;
+
+import com.example.qsensorapp.R;
+
 import database.DBAdapter;
 
 public class MainActivity extends Activity {
 
 	private DBAdapter database;
-		
+	private int graph;
 	public static String age = "N/A";
 	public static String gender = "N/A";
 	public static String movieName = "";
 	public static List<Movie> moviesList = new ArrayList<Movie>();
 	TextView infoField;
-	
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +35,7 @@ public class MainActivity extends Activity {
         database = new DBAdapter(this);
         database.open();
         
-        
-       /* Movie m = new Movie("Moras", gender, 20, 40);
-        database.insertEntry(m);*/
-        
+        //Update list in myMovies
         if(!database.getAllMovies().isEmpty()) {
 	        for(Movie m : database.getAllMovies())
 	        	moviesList.add(m);
@@ -73,6 +56,9 @@ public class MainActivity extends Activity {
          infoField.setText(" Age: " + age + "\n Gender: " + gender );
     }
     
+    /**
+     * When application is closed, this method is called
+     */
     @Override
     protected void onDestroy() {
     	super.onDestroy();
@@ -127,7 +113,6 @@ public class MainActivity extends Activity {
    	     	break;
    	     
    	    //Does nothing at the moment
-   	    //TODO: Add functionality
     	case R.id.community_button:
     		/*Toast.makeText(getApplicationContext(), "Community",
     				Toast.LENGTH_SHORT).show();*/
