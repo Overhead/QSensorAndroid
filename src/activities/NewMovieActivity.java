@@ -5,9 +5,7 @@ import helpers.StartNewAsyncTask;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Scanner;
 
 import android.app.Activity;
@@ -24,12 +22,18 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import classes.Emotion;
 import classes.Movie;
 import classes.QSensorBTDevice;
 
 import com.example.qsensorapp.R;
+import com.jjoe64.graphview.BarGraphView;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.GraphViewSeries;
+import com.jjoe64.graphview.LineGraphView;
 
 import database.DBAdapter;
 
@@ -61,8 +65,33 @@ public class NewMovieActivity extends Activity {
 		
 		movieEmotions = new LinkedList<Emotion>();
 		bluetooth = BluetoothAdapter.getDefaultAdapter();
+		
+		drawGraph();
 	}
 
+	public void drawGraph(){
+		int num = 150;
+		GraphViewData[] data = new GraphViewData[num];
+		double v=0;
+		for (int i=0; i<num; i++) {
+			v += 0.2;
+			data[i] = new GraphViewData(i, Math.sin(v));
+		}
+		// graph with dynamically genereated horizontal and vertical labels
+		GraphView graphView = new LineGraphView(
+					this
+					, "GraphViewDemo"
+			);
+		// add data
+		graphView.addSeries(new GraphViewSeries(data));
+		// set view port, start=2, size=40
+		graphView.setViewPort(2, 40);
+		graphView.setScrollable(true);
+		
+		LinearLayout layout = (LinearLayout) findViewById(R.id.linearLGraph);  
+		layout.addView(graphView);  
+	}
+	
 	// Define what each button shall do
 	public void onClick(View view) {
 		switch (view.getId()) {

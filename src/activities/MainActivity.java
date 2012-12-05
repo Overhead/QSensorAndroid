@@ -20,7 +20,6 @@ import database.DBAdapter;
 public class MainActivity extends Activity {
 
 	private DBAdapter database;
-	private int graph;
 	public static String age = "N/A";
 	public static String gender = "N/A";
 	public static String movieName = "";
