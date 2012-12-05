@@ -33,7 +33,7 @@ public class ServerCommunication {
 	private static final int TIMEOUT = 5000;
 	
 	/** What ip has the Server */
-	public static String SERVER_IP="http://130.240.96.142";
+	public static String SERVER_IP="http://130.240.98.42";
 	/**
 	 * Set the current serverIP
 	 * @param serverIP
@@ -147,6 +147,7 @@ public class ServerCommunication {
 
 			communityMovies = ParseXMLStringToList.getMoviesForAgeAndGender(responseText, gender, age);
 			
+		
 			return communityMovies;
 
 		} catch (ClientProtocolException e) {

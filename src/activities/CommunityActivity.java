@@ -100,6 +100,7 @@ public class CommunityActivity extends Activity {
 					communityMoviesInListView.add(m.toString());
 	
 				aa.notifyDataSetChanged();
+				moviesListView.setAdapter(aa);
 			}
 			else{
 				Toast.makeText(getApplicationContext(), "Type in age",
