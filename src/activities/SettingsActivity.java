@@ -1,22 +1,22 @@
 package activities;
 
-import com.example.qsensorapp.R;
-import com.example.qsensorapp.R.id;
-import com.example.qsensorapp.R.layout;
-
+import helpers.ServerCommunication;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemSelectedListener;
+
+import com.example.qsensorapp.R;
 
 public class SettingsActivity extends Activity {
 
 	EditText ageField;
+	EditText ipAddress;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,18 +28,19 @@ public class SettingsActivity extends Activity {
 	public void setInterface() {
 		final Spinner genderSpinner = (Spinner) findViewById(R.id.genderspinner);
 
-		ArrayAdapter<CharSequence> genderAdapter = ArrayAdapter
-				.createFromResource(this, R.array.gender,
-						android.R.layout.simple_spinner_item);
+		ArrayAdapter<CharSequence> genderAdapter = ArrayAdapter.createFromResource(this, R.array.gender,
+															android.R.layout.simple_spinner_item);
 
-		genderAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		genderSpinner.setAdapter(genderAdapter);
-		genderSpinner
-				.setOnItemSelectedListener(new MyOnItemSelectedListenerGender());
+		genderSpinner.setOnItemSelectedListener(new MyOnItemSelectedListenerGender());
 
 		ageField = (EditText) findViewById(R.id.ageTextField);
-
+		ipAddress = (EditText)findViewById(R.id.serverIpTextField);
+		ipAddress.setText(MainActivity.SERVER_IP);
+		
+		if(!MainActivity.age.toString().equalsIgnoreCase("n/a"))
+			ageField.setText(MainActivity.age);
 	}
 
 	/**
@@ -57,10 +58,13 @@ public class SettingsActivity extends Activity {
 			if (MainActivity.gender.equals("N/A")
 					|| MainActivity.age.equals("")) {
 				Toast.makeText(getApplicationContext(),
-						"You have to choose gender and age", Toast.LENGTH_SHORT)
-						.show();
-			} else
+						"You have to choose gender and age", Toast.LENGTH_SHORT).show();
+			} else {
+				if(!ipAddress.getText().toString().equalsIgnoreCase("")) {
+					MainActivity.SERVER_IP = ipAddress.getText().toString();
+				}
 				finish();
+			}
 
 			break;
 

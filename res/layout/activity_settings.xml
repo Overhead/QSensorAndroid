@@ -26,8 +26,14 @@
             android:inputType="number" 
             android:hint="Write your age">
 
-            <requestFocus />
         </EditText>
+
+        <EditText
+            android:id="@+id/serverIpTextField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Write the servers IP Address" />
 		
         <LinearLayout
             android:layout_width="fill_parent"

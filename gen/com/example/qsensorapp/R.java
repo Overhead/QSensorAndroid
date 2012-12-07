@@ -38,9 +38,9 @@ public final class R {
         public static final int imdbMoviesListView=0x7f0a0008;
         public static final int infoTextView=0x7f0a0009;
         public static final int linearLGraph=0x7f0a000f;
-        public static final int menu_settings=0x7f0a0017;
+        public static final int menu_settings=0x7f0a0018;
         public static final int movieNameTextField=0x7f0a0006;
-        public static final int moviesListView=0x7f0a0016;
+        public static final int moviesListView=0x7f0a0017;
         public static final int my_movies_button=0x7f0a000b;
         public static final int new_movie_back_button=0x7f0a000e;
         public static final int new_movie_button=0x7f0a000a;
@@ -48,11 +48,12 @@ public final class R {
         public static final int radioButtonMale=0x7f0a0001;
         public static final int record_movie_button=0x7f0a000d;
         public static final int search_imdb_button=0x7f0a0007;
-        public static final int set_settings_button=0x7f0a0012;
-        public static final int settings=0x7f0a0018;
-        public static final int settings_back_button=0x7f0a0013;
-        public static final int show_movie_back_button=0x7f0a0015;
-        public static final int show_new_movie_button=0x7f0a0014;
+        public static final int serverIpTextField=0x7f0a0012;
+        public static final int set_settings_button=0x7f0a0013;
+        public static final int settings=0x7f0a0019;
+        public static final int settings_back_button=0x7f0a0014;
+        public static final int show_movie_back_button=0x7f0a0016;
+        public static final int show_new_movie_button=0x7f0a0015;
     }
     public static final class layout {
         public static final int activity_comunity=0x7f030000;

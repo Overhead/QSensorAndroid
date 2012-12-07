@@ -23,6 +23,7 @@ public class MainActivity extends Activity {
 	public static String age = "N/A";
 	public static String gender = "N/A";
 	public static String movieName = "";
+	public static String SERVER_IP = "";
 	public static List<Movie> moviesList = new ArrayList<Movie>();
 	TextView infoField;
 	

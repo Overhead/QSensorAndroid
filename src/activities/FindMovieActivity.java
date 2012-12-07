@@ -3,10 +3,10 @@ package activities;
 import helpers.StartNewAsyncTask;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,7 +17,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 import classes.Movie;
 
@@ -56,15 +55,23 @@ public class FindMovieActivity extends Activity {
 		
 		imdbMoviesListView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-				MainActivity.movieName = imdbMoviesList.get(position).getMovieName();
-				// When clicked, show a toast with the TextView text
-				String text = ((TextView) view).getText().toString();
-				Toast toast = Toast.makeText(getApplicationContext(),"Clicked on "+position + " : " + text, Toast.LENGTH_SHORT);
-				toast.show();
-				
 				Intent myIntent = new Intent(view.getContext(), NewMovieActivity.class);
-				myIntent.putExtra("IMDBID", imdbMoviesList.get(position).getImdbId());
-				myIntent.putExtra("YEAR", imdbMoviesList.get(position).getProductionYear());
+				
+				if(!imdbMoviesList.isEmpty()){
+					MainActivity.movieName = imdbMoviesList.get(position).getMovieName();
+					myIntent.putExtra("IMDBID", imdbMoviesList.get(position).getImdbId());
+					myIntent.putExtra("YEAR", imdbMoviesList.get(position).getProductionYear());
+				}
+				else {
+					MainActivity.movieName = movieName.getText().toString();
+					myIntent.putExtra("IMDBID", 1);
+					myIntent.putExtra("YEAR", Calendar.getInstance().get(Calendar.YEAR));
+				}
+				// When clicked, show a toast with the TextView text
+				//String text = ((TextView) view).getText().toString();
+				//Toast toast = Toast.makeText(getApplicationContext(),"Clicked on "+position + " : " + text, Toast.LENGTH_SHORT);
+				//toast.show();
+
 	    	    startActivity(myIntent);
 	    	    finish();
 			}
@@ -94,9 +101,10 @@ public class FindMovieActivity extends Activity {
 				if(!imdbMoviesList.isEmpty())
 					for (Movie m : imdbMoviesList)
 						imdbMovies.add(m.imdbToString());
-				else
-					imdbMovies.add("No movie found");
-				
+				else {
+					Toast.makeText(getApplicationContext(), "No connection to server or\n No result with this name",Toast.LENGTH_SHORT).show();
+					imdbMovies.add("No movie found\nClick to create movie with name: " + movieName.getText().toString());
+				}
 				aa.notifyDataSetChanged();
 				imdbMoviesListView.setAdapter(aa);
 				break;
