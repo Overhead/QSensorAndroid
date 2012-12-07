@@ -1,0 +1,33 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ADD8E6"
+    tools:context=".FindMovieActivity" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <EditText
+            android:id="@+id/movieNameTextField"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/movieName_hint" />
+
+            <Button
+                android:id="@+id/search_imdb_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClick"
+                android:text="@string/searchImdb" />
+            
+            <ListView
+            android:id="@+id/imdbMoviesListView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"  />
+    </LinearLayout>
+
+</RelativeLayout>

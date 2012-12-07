@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import classes.Emotion;
 import classes.Movie;
@@ -40,7 +41,7 @@ import database.DBAdapter;
 
 public class NewMovieActivity extends Activity {
 
-	EditText movieName;
+	TextView movieName;
 	Button recordButton;
 	boolean recording;
 	private DBAdapter database;
@@ -55,6 +56,8 @@ public class NewMovieActivity extends Activity {
 	double averageEda = 0;
 	double averageBaseEDA = 0;
 	LinkedList<Emotion> movieEmotions;
+	String imdbMovieId;
+	int productionYear;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,12 +66,16 @@ public class NewMovieActivity extends Activity {
 
 		//Initializes buttons
 		recordButton = (Button)findViewById(R.id.record_movie_button);
-		movieName = (EditText)findViewById(R.id.movieNameTextField);
 		
+		movieName = (TextView)findViewById(R.id.movieNameTextField);
 		movieEmotions = new LinkedList<Emotion>();
 		bluetooth = BluetoothAdapter.getDefaultAdapter();
 		graphView = new LineGraphView(this, "GraphViewDemo");
 		layout = (LinearLayout) findViewById(R.id.linearLGraph);
+		movieName.setText(MainActivity.movieName);
+		Intent intent = getIntent();
+		imdbMovieId = intent.getStringExtra("IMDBID");
+		productionYear = Integer.parseInt(intent.getStringExtra("YEAR"));
 	}
 
 	public void drawGraph(LinkedList<Emotion> emotions){
@@ -85,7 +92,6 @@ public class NewMovieActivity extends Activity {
 
 				// add data
 				graphView.addSeries(new GraphViewSeries(grapData.toArray(new GraphViewData[0])));
-
 				// set view port, start=2, size=40
 				if (time < 60)
 					graphView.setViewPort(0, time);
@@ -377,7 +383,8 @@ public class NewMovieActivity extends Activity {
 		Log.i("SensorResult", "AverageBase: "+ averageBaseEDA);
 		Log.i("SensorResult", "Sending EDA to DB: "+movieEDA);
 		
-		Movie m = new Movie(MainActivity.movieName, MainActivity.gender, MainActivity.age,movieEDA);
+		//TODO fix production year
+		Movie m = new Movie(imdbMovieId,MainActivity.movieName, MainActivity.gender, MainActivity.age,movieEDA, productionYear);
 		database = new DBAdapter(this);
 		database.open();
 

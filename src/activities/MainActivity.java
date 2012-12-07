@@ -101,8 +101,10 @@ public class MainActivity extends Activity {
     	
     	//Move the user to "new movie" page
     	case R.id.new_movie_button:
-    		 myIntent = new Intent(view.getContext(), NewMovieActivity.class);
-    	     startActivity(myIntent);
+    		/* myIntent = new Intent(view.getContext(), NewMovieActivity.class);
+    	     startActivity(myIntent);*/
+			 myIntent = new Intent(view.getContext(), FindMovieActivity.class);
+			 startActivity(myIntent);
     	     break;
     	
     	 //Move the user to "My Movies" page

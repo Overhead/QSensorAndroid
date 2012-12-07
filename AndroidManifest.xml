@@ -43,6 +43,10 @@
             android:name="activities.CommunityActivity"
             android:label="@string/title_activity_comunity" >
         </activity>
+        <activity
+            android:name="activities.FindMovieActivity"
+            android:label="@string/title_activity_find_movie" >
+        </activity>
     </application>
 
 </manifest>

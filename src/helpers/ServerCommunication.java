@@ -33,7 +33,7 @@ public class ServerCommunication {
 	private static final int TIMEOUT = 5000;
 	
 	/** What ip has the Server */
-	public static String SERVER_IP="http://130.240.98.42";
+	public static String SERVER_IP="http://130.240.99.139";
 	/**
 	 * Set the current serverIP
 	 * @param serverIP
@@ -67,6 +67,7 @@ public class ServerCommunication {
 			List<NameValuePair> pairs = new ArrayList<NameValuePair>();
 			
 			pairs.add(new BasicNameValuePair("movie", movie.getMovieName()));
+			pairs.add(new BasicNameValuePair("imdbId", movie.getImdbId()));
 			
 			if(!MainActivity.age.equalsIgnoreCase("n/a"))
 				pairs.add(new BasicNameValuePair("age", movie.getAge()));
@@ -147,7 +148,6 @@ public class ServerCommunication {
 
 			communityMovies = ParseXMLStringToList.getMoviesForAgeAndGender(responseText, gender, age);
 			
-		
 			return communityMovies;
 
 		} catch (ClientProtocolException e) {
@@ -157,6 +157,49 @@ public class ServerCommunication {
 		}
 
 		return communityMovies;
+	}
+	
+	
+	public static List<Movie> getIMDBMovies(String movieName){
+		List<Movie> imdbMovies = new ArrayList<Movie>();
+		
+		HttpParams httpParams = new BasicHttpParams();
+		// Set the timeout in milliseconds until a connection is established.
+		// The default value is zero, that means the timeout is not used. 
+		int timeoutConnection = TIMEOUT;
+		HttpConnectionParams.setConnectionTimeout(httpParams, timeoutConnection);
+		// Set the timeout in milliseconds until a connection is established.
+		// The default value is zero, that means the timeout is not used. 
+		int timeoutSocket = TIMEOUT;
+		HttpConnectionParams.setSoTimeout(httpParams, timeoutSocket);
+		HttpClient httpClient = new DefaultHttpClient(httpParams);
+
+		try {
+			String url;
+			url = SERVER_IP+"/movie/movie/imdbCheck?movie="+movieName;
+					
+
+			Log.i("Database", url);
+			HttpResponse response = httpClient.execute(new HttpGet(url));
+			httpClient.getConnectionManager().closeExpiredConnections();
+	
+			HttpEntity entity = response.getEntity();
+			String responseText = EntityUtils.toString(entity);
+			Log.i("Database", responseText);
+			
+			imdbMovies = ParseXMLStringToList.getMoviesFromImdbXMLByName(responseText, movieName);
+			
+			return imdbMovies;
+
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+			Log.e("Database", "Something wrong with the database connection");
+		} catch (IOException e) {
+			e.printStackTrace();
+			Log.e("Database", "Something wrong with the database connection");
+		}
+
+		return imdbMovies;
 	}
 	
 }

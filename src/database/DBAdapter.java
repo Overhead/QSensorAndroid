@@ -25,25 +25,33 @@ public class DBAdapter {
 	public static final String MOVIE_ID = "_id";
 	public static final int MOVIE_ID_NO = 0;
 	// The name and column index of each column in your database.
+	public static final String MOVIEIMDBID = "imdbId";
+	public  static final int MOVIEIMDBID_NUM = 1;
+	
 	public static final String MOVIENAME = "movieName";
-	public static final int MOVIENAME_NUM = 1;
+	public static final int MOVIENAME_NUM = 2;
 	
 	public static final String AGE = "age";
-	public static final int AGE_NUM = 2;
+	public static final int AGE_NUM = 3;
 	
 	public static final String GENDER = "gender";
-	public static final int GENDER_NUM = 3;
+	public static final int GENDER_NUM = 4;
 	
 	public static final String EMOTIONVALUE = "emotionValue";
-	public static final int EMOTIONVALUE_NUM = 4;
+	public static final int EMOTIONVALUE_NUM = 5;
+	
+	public static final String PRODUCTIONYEAR = "productionYear";
+	public static final int PRODUCTIONYEAR_NUM = 6;
 	
 	// SQL Statement to create a new database.
 	private static final String DATABASE_CREATE = "create table "
 			+ DATABASE_TABLE + " (" + MOVIE_ID + " integer primary key autoincrement, " 
+			+ MOVIEIMDBID + " text not null,"
 			+ MOVIENAME + " text not null,"
 			+ AGE + " text not null," 
 			+ GENDER + " text not null,"
-			+ EMOTIONVALUE + " text not null);";
+			+ EMOTIONVALUE + " text not null," 
+			+ PRODUCTIONYEAR +" text not null);";
 	
 	// Variable to hold the database instance
 	private SQLiteDatabase db;
@@ -75,28 +83,30 @@ public class DBAdapter {
 
 		ContentValues newValues = new ContentValues();
 
+		newValues.put(MOVIEIMDBID, newMovie.getImdbId());
 		newValues.put(MOVIENAME, newMovie.getMovieName());
 		newValues.put(AGE, newMovie.getAge());
 		newValues.put(GENDER, newMovie.getGender());
 		newValues.put(EMOTIONVALUE, newMovie.getAverageEda());
-
+		newValues.put(PRODUCTIONYEAR, newMovie.getProductionYear());
 		return db.insert(DATABASE_TABLE, null, newValues);
 	}
 	
 	public Movie getEntry(long _rowIndex) {
 		Movie objectInstance=null;
 
-		Cursor myCursor = db.query(true, DATABASE_TABLE, new String[] { MOVIE_ID, MOVIENAME, GENDER, AGE, EMOTIONVALUE }, MOVIE_ID + '=' + _rowIndex, null , null, null, null, null);
+		Cursor myCursor = db.query(true, DATABASE_TABLE, new String[] { MOVIE_ID, MOVIEIMDBID, MOVIENAME, GENDER, AGE, EMOTIONVALUE,PRODUCTIONYEAR }, MOVIE_ID + '=' + _rowIndex, null , null, null, null, null);
 		if (myCursor.getCount() == 0 || !myCursor.moveToFirst()) {
 	          throw new SQLException("Did not find any movie with index: " + _rowIndex);
 	      }
-
+		
+		String imdbid = myCursor.getString(myCursor.getColumnIndex(MOVIEIMDBID));
 		String movieName = myCursor.getString(myCursor.getColumnIndex(MOVIENAME));
 		String gender = myCursor.getString(myCursor.getColumnIndex(GENDER));
 		String age = myCursor.getString(myCursor.getColumnIndex(AGE));
 		double emotionValue = Double.parseDouble(myCursor.getString(myCursor.getColumnIndex(EMOTIONVALUE)));
-
-		objectInstance = new Movie(movieName, gender, age, emotionValue);
+		int productionYear = Integer.parseInt(myCursor.getString(myCursor.getColumnIndex(PRODUCTIONYEAR)));
+		objectInstance = new Movie(imdbid, movieName, gender, age, emotionValue,productionYear);
 		return objectInstance;
 	}
 	
@@ -104,17 +114,19 @@ public class DBAdapter {
 		List<Movie> movieList = new ArrayList<Movie>();
 		
 		Cursor myCursor = getAllEntries();
-		String movieName, gender, age;
+		String movieName, gender, age, imdbId;
 		double emotionValue;
+		int productionYear;
 		
 		if(myCursor.moveToFirst())
 			do{
+				imdbId = myCursor.getString(myCursor.getColumnIndex(MOVIEIMDBID));
 				movieName = myCursor.getString(myCursor.getColumnIndex(MOVIENAME));
 				gender = myCursor.getString(myCursor.getColumnIndex(GENDER));
 				age = myCursor.getString(myCursor.getColumnIndex(AGE));
 				emotionValue = Double.parseDouble(myCursor.getString(myCursor.getColumnIndex(EMOTIONVALUE)));
-
-				Movie newMovie = new Movie(movieName, gender, age, emotionValue);
+				productionYear = Integer.parseInt(myCursor.getString(myCursor.getColumnIndex(PRODUCTIONYEAR)));
+				Movie newMovie = new Movie(imdbId,movieName, gender, age, emotionValue, productionYear);
 				movieList.add(newMovie);
 			}while(myCursor.moveToNext());
 		
@@ -127,7 +139,7 @@ public class DBAdapter {
 	}
 
 	public Cursor getAllEntries() {
-		return db.query(DATABASE_TABLE, new String[] { MOVIE_ID, MOVIENAME, AGE, GENDER, EMOTIONVALUE},
+		return db.query(DATABASE_TABLE, new String[] { MOVIE_ID, MOVIEIMDBID, MOVIENAME, AGE, GENDER, EMOTIONVALUE, PRODUCTIONYEAR},
 				null, null, null, null, null);
 	}
 
