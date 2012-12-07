@@ -33,7 +33,7 @@ public class ServerCommunication {
 	private static final int TIMEOUT = 5000;
 	
 	/** What ip has the Server */
-	public static String SERVER_IP="http://130.240.98.42";
+	public static String SERVER_IP="http://130.240.99.139";
 	/**
 	 * Set the current serverIP
 	 * @param serverIP
@@ -148,7 +148,6 @@ public class ServerCommunication {
 
 			communityMovies = ParseXMLStringToList.getMoviesForAgeAndGender(responseText, gender, age);
 			
-		
 			return communityMovies;
 
 		} catch (ClientProtocolException e) {
@@ -187,14 +186,17 @@ public class ServerCommunication {
 			HttpEntity entity = response.getEntity();
 			String responseText = EntityUtils.toString(entity);
 			Log.i("Database", responseText);
+			
 			imdbMovies = ParseXMLStringToList.getMoviesFromImdbXMLByName(responseText, movieName);
 			
 			return imdbMovies;
 
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
+			Log.e("Database", "Something wrong with the database connection");
 		} catch (IOException e) {
 			e.printStackTrace();
+			Log.e("Database", "Something wrong with the database connection");
 		}
 
 		return imdbMovies;

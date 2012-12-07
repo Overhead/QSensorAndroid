@@ -57,6 +57,7 @@ public class NewMovieActivity extends Activity {
 	double averageBaseEDA = 0;
 	LinkedList<Emotion> movieEmotions;
 	String imdbMovieId;
+	int productionYear;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +75,7 @@ public class NewMovieActivity extends Activity {
 		movieName.setText(MainActivity.movieName);
 		Intent intent = getIntent();
 		imdbMovieId = intent.getStringExtra("IMDBID");
+		productionYear = Integer.parseInt(intent.getStringExtra("YEAR"));
 	}
 
 	public void drawGraph(LinkedList<Emotion> emotions){
@@ -90,7 +92,6 @@ public class NewMovieActivity extends Activity {
 
 				// add data
 				graphView.addSeries(new GraphViewSeries(grapData.toArray(new GraphViewData[0])));
-
 				// set view port, start=2, size=40
 				if (time < 60)
 					graphView.setViewPort(0, time);
@@ -383,7 +384,7 @@ public class NewMovieActivity extends Activity {
 		Log.i("SensorResult", "Sending EDA to DB: "+movieEDA);
 		
 		//TODO fix production year
-		Movie m = new Movie(imdbMovieId,MainActivity.movieName, MainActivity.gender, MainActivity.age,movieEDA, 1232);
+		Movie m = new Movie(imdbMovieId,MainActivity.movieName, MainActivity.gender, MainActivity.age,movieEDA, productionYear);
 		database = new DBAdapter(this);
 		database.open();
 

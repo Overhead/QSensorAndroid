@@ -64,6 +64,7 @@ public class FindMovieActivity extends Activity {
 				
 				Intent myIntent = new Intent(view.getContext(), NewMovieActivity.class);
 				myIntent.putExtra("IMDBID", imdbMoviesList.get(position).getImdbId());
+				myIntent.putExtra("YEAR", imdbMoviesList.get(position).getProductionYear());
 	    	    startActivity(myIntent);
 	    	    finish();
 			}
@@ -90,9 +91,12 @@ public class FindMovieActivity extends Activity {
 				findMovies.execute(3);
 			
 				//Populate the listview
-				for (Movie m : imdbMoviesList)
-					imdbMovies.add(m.imdbToString());
-	
+				if(!imdbMoviesList.isEmpty())
+					for (Movie m : imdbMoviesList)
+						imdbMovies.add(m.imdbToString());
+				else
+					imdbMovies.add("No movie found");
+				
 				aa.notifyDataSetChanged();
 				imdbMoviesListView.setAdapter(aa);
 				break;

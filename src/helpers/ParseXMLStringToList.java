@@ -15,53 +15,61 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import android.util.Log;
+
 import classes.Movie;
 
 public class ParseXMLStringToList {
 	
 	public static List<Movie> getMoviesForAgeAndGender(String xml, String gender, String age) {
 		List<Movie> movieList = new ArrayList<Movie>();
-		
-		Document xmlDocument = XMLfromString(xml);
-		
-		NodeList nodes = xmlDocument.getElementsByTagName("item");
-		
-		for(int i=0; i<nodes.getLength();i++){
-			Movie m = new Movie();
-			Element e = (Element)nodes.item(i);
-			
-			m.setMovieName(XMLFunctions.getValue(e, "nameFilm"));
-			m.setAge(age);
-			m.setGender(gender);
-			m.setAverageEda(Double.parseDouble(XMLFunctions.getValue(e, "EmoLvl")));
-			
-			movieList.add(m);
-			
+		try {
+			Document xmlDocument = XMLfromString(xml);
+
+			NodeList nodes = xmlDocument.getElementsByTagName("item");
+
+			for (int i = 0; i < nodes.getLength(); i++) {
+				Movie m = new Movie();
+				Element e = (Element) nodes.item(i);
+
+				m.setMovieName(XMLFunctions.getValue(e, "nameFilm"));
+				m.setAge(age);
+				m.setGender(gender);
+				m.setAverageEda(Double.parseDouble(XMLFunctions.getValue(e,"EmoLvl")));
+
+				movieList.add(m);
+
+			}
+		} catch (Exception e) {
+			Log.e("XML", "Something wrong with the XML parsing");
 		}
 
 		return movieList;
 	}
-	
-	public static List<Movie> getMoviesFromImdbXMLByName(String xml, String movieName){
+
+	public static List<Movie> getMoviesFromImdbXMLByName(String xml,String movieName) {
 		List<Movie> movieList = new ArrayList<Movie>();
 		
-		Document xmlDocument = XMLfromString(xml);
-		
-		NodeList nodes = xmlDocument.getElementsByTagName("item");
-		
-		for(int i=0; i<nodes.getLength();i++){
-			Movie m = new Movie();
-			Element e = (Element)nodes.item(i);
-			
-			m.setMovieName(XMLFunctions.getValue(e, "title"));
-			m.setAge("0");
-			m.setAverageEda(0);
-			m.setGender("N/A");
-			m.setProductionYear(Integer.parseInt((XMLFunctions.getValue(e, "year"))));
-			m.setImdbId(XMLFunctions.getValue(e, "imdbId"));
-			
-			movieList.add(m);
-			
+		try {
+			Document xmlDocument = XMLfromString(xml);
+			NodeList nodes = xmlDocument.getElementsByTagName("item");
+
+			for (int i = 0; i < nodes.getLength(); i++) {
+				Movie m = new Movie();
+				Element e = (Element) nodes.item(i);
+
+				m.setMovieName(XMLFunctions.getValue(e, "title"));
+				m.setAge("0");
+				m.setAverageEda(0);
+				m.setGender("N/A");
+				m.setProductionYear(Integer.parseInt((XMLFunctions.getValue(e,"year"))));
+				m.setImdbId(XMLFunctions.getValue(e, "imdbId"));
+
+				movieList.add(m);
+
+			}
+		} catch (Exception e) {
+			Log.e("XML", "Something wrong with the xml parsing");
 		}
 
 		return movieList;

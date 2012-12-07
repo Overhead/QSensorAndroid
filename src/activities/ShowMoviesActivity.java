@@ -76,7 +76,7 @@ public class ShowMoviesActivity extends Activity {
 			// Starts the "new movie" intent
 			case R.id.show_new_movie_button:				
 				myIntent = new Intent(view.getContext(), FindMovieActivity.class);
-				 startActivity(myIntent); 
+				startActivity(myIntent); 
 				break;
 				
 			// Closes the activity and return to previous
