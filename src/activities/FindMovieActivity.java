@@ -64,7 +64,7 @@ public class FindMovieActivity extends Activity {
 				}
 				else {
 					MainActivity.movieName = movieName.getText().toString();
-					myIntent.putExtra("IMDBID", 1);
+					myIntent.putExtra("IMDBID", "1");
 					myIntent.putExtra("YEAR", Calendar.getInstance().get(Calendar.YEAR));
 				}
 				// When clicked, show a toast with the TextView text

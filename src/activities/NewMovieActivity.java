@@ -73,9 +73,9 @@ public class NewMovieActivity extends Activity {
 		graphView = new LineGraphView(this, "GraphViewDemo");
 		layout = (LinearLayout) findViewById(R.id.linearLGraph);
 		movieName.setText(MainActivity.movieName);
-		Intent intent = getIntent();
-		imdbMovieId = intent.getStringExtra("IMDBID");
-		productionYear = Integer.parseInt(intent.getStringExtra("YEAR"));
+		Bundle intent = getIntent().getExtras(); 
+		imdbMovieId = intent.getString("IMDBID");
+		productionYear = intent.getInt("YEAR");
 	}
 
 	public void drawGraph(LinkedList<Emotion> emotions){
