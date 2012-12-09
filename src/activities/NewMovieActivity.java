@@ -5,6 +5,7 @@ import helpers.StartNewAsyncTask;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -30,6 +31,8 @@ import classes.Movie;
 import classes.QSensorBTDevice;
 
 import com.example.qsensorapp.R;
+import com.jjoe64.graphview.*;
+import com.jjoe64.graphview.GraphView.*;
 
 import database.DBAdapter;
 
@@ -46,7 +49,7 @@ public class NewMovieActivity extends Activity {
 	BroadcastReceiver discoveryMonitor;
 	BroadcastReceiver discoveryResult;
 	LinearLayout layout;
-	//GraphView graphView;
+	GraphView graphView;
 	double averageEda = 0;
 	double averageBaseEDA = 0;
 	LinkedList<Emotion> movieEmotions;
@@ -66,7 +69,13 @@ public class NewMovieActivity extends Activity {
 		bluetooth = BluetoothAdapter.getDefaultAdapter();
 		//graphView = new LineGraphView(this, "GraphViewDemo");
 		layout = (LinearLayout) findViewById(R.id.linearLGraph);
-		movieName.setText(MainActivity.movieName);
+		String mainMovieName = "";
+		MainActivity currentMain = MainActivity.getCurrentMainActivity();
+		if (currentMain != null) {
+			mainMovieName = currentMain.getMovieName();
+		}
+		
+		movieName.setText(mainMovieName);
 		Bundle intent = getIntent().getExtras(); 
 		imdbMovieId = intent.getString("IMDBID");
 		productionYear = intent.getInt("YEAR");
@@ -76,26 +85,26 @@ public class NewMovieActivity extends Activity {
 		try {
 			if (!emotions.isEmpty()) {
 				double time = 0;
-				//ArrayList<GraphViewData> grapData = new ArrayList<GraphViewData>();
+				ArrayList<GraphViewData> grapData = new ArrayList<GraphViewData>();
 				for (int i = 0; i < emotions.size(); i++) {
-					//grapData.add(new GraphViewData(emotions.get(i).getTime(),emotions.get(i).getEDA()));
+					grapData.add(new GraphViewData(emotions.get(i).getTime(),emotions.get(i).getEDA()));
 
 				}
 				time = emotions.get(emotions.size() - 1).getTime();
 				Log.i("Graph", "Time: " + time);
 
 				// add data
-				//graphView.addSeries(new GraphViewSeries(grapData.toArray(new GraphViewData[0])));
+				graphView.addSeries(new GraphViewSeries(grapData.toArray(new GraphViewData[0])));
 				// set view port, start=2, size=40
-				//if (time < 60)
-					//graphView.setViewPort(0, time);
-				//else if (time < 600)
-					//graphView.setViewPort(0, time / 2);
-				//else
-					//graphView.setViewPort(0, time / 4);
+				if (time < 60)
+					graphView.setViewPort(0, time);
+				else if (time < 600)
+					graphView.setViewPort(0, time / 2);
+				else
+					graphView.setViewPort(0, time / 4);
 
-				//graphView.setScrollable(true);
-				//layout.addView(graphView);
+				graphView.setScrollable(true);
+				layout.addView(graphView);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -190,7 +199,10 @@ public class NewMovieActivity extends Activity {
 			
 			//If the user choose to activate bluetooth, start discovering of qsensor
 			if (bluetoothActivated){
-				MainActivity.movieName = movieName.getText().toString();
+				MainActivity currentMain = MainActivity.getCurrentMainActivity();
+				if (currentMain != null) {
+					currentMain.setMovieName(movieName.getText().toString());
+				}
 				discover();
 			}
 		}
@@ -378,7 +390,16 @@ public class NewMovieActivity extends Activity {
 		Log.i("SensorResult", "Sending EDA to DB: "+movieEDA);
 		
 		//TODO fix production year
-		Movie m = new Movie(imdbMovieId,MainActivity.movieName, MainActivity.gender, MainActivity.age,movieEDA, productionYear);
+		MainActivity currentMain = MainActivity.getCurrentMainActivity();
+		String mainMovieName = "";
+		String mainGender = "";
+		String mainAge = "";
+		if (currentMain != null) {
+			mainMovieName = currentMain.getMovieName();
+			mainGender = currentMain.getGender();
+			mainAge = currentMain.getAge();
+		}
+		Movie m = new Movie(imdbMovieId,mainMovieName, mainGender, mainAge,movieEDA, productionYear);
 		database = new DBAdapter(this);
 		database.open();
 
@@ -386,9 +407,9 @@ public class NewMovieActivity extends Activity {
 
 		//Refresh the lit in the "My Movies" page
 		if(!database.getAllMovies().isEmpty()) {
-			MainActivity.moviesList.clear();
-			for(Movie movie : database.getAllMovies())
-				MainActivity.moviesList.add(movie);
+			if (currentMain != null) {
+				currentMain.setMovieList(database.getAllMovies());
+			}
 		}
 
 		database.close();

@@ -24,7 +24,7 @@ import android.util.Log;
 
 
 public class ServerCommunication {
-	
+
 	/** What ip has the Server */
 	public static String SERVER_IP="http://130.240.99.19";
 	/**
@@ -35,12 +35,12 @@ public class ServerCommunication {
 	{
 		SERVER_IP = serverIP;
 	}
-	
+
 	/**
 	 * TODO: Update the name of each table on post
 	 */
 	public static void SendMovieDataToDB(Movie movie){
-		
+
 		HttpParams httpParams = new BasicHttpParams();
 		// Set the timeout in milliseconds until a connection is established.
 		// The default value is zero, that means the timeout is not used. 
@@ -50,44 +50,47 @@ public class ServerCommunication {
 		// The default value is zero, that means the timeout is not used. 
 		int timeoutSocket = 50000;
 		HttpConnectionParams.setSoTimeout(httpParams, timeoutSocket);
-		
+
 		HttpClient httpClient = new DefaultHttpClient(httpParams);
 		HttpPost httppost = new HttpPost("/movie/movie/reception");
 
 		try{
-		
-			 String PostData="36";
-             StringEntity httpPostEntity = new StringEntity(PostData, HTTP.UTF_8);
-             httppost.setEntity(httpPostEntity);
-			
+
+			String PostData="36";
+			StringEntity httpPostEntity = new StringEntity(PostData, HTTP.UTF_8);
+			httppost.setEntity(httpPostEntity);
+
 			httppost.setHeader("host", "http://130.240.99.19");
 
 			List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-			
+
 			pairs.add(new BasicNameValuePair("movie", movie.getMovieName()));
-			
-			if(!MainActivity.age.equalsIgnoreCase("n/a"))
-				pairs.add(new BasicNameValuePair("age", ""+movie.getAge()));
-			else
-				pairs.add(new BasicNameValuePair("age", "unknown"));
-			
-			if(!MainActivity.gender.equalsIgnoreCase("n/a"))
-				pairs.add(new BasicNameValuePair("gender", movie.getGender()));
-			else
-				pairs.add(new BasicNameValuePair("gender", "unknown"));
-			
-			pairs.add(new BasicNameValuePair("EmoLvl", ""+movie.getAverageEda()));
-			
-			httppost.setEntity(new UrlEncodedFormEntity(pairs));
-			
-			httpClient.getConnectionManager();
-			HttpResponse response = httpClient.execute(httppost);
-			
-			if(response.getStatusLine().getStatusCode() == 200){
-				Log.i("current","Sent the movie to database");
+
+			MainActivity currentMain = MainActivity.getCurrentMainActivity();
+			if (currentMain != null) {
+
+				if(!currentMain.getAge().equalsIgnoreCase("n/a"))
+					pairs.add(new BasicNameValuePair("age", ""+movie.getAge()));
+				else
+					pairs.add(new BasicNameValuePair("age", "unknown"));
+
+				if(!currentMain.getGender().equalsIgnoreCase("n/a"))
+					pairs.add(new BasicNameValuePair("gender", movie.getGender()));
+				else
+					pairs.add(new BasicNameValuePair("gender", "unknown"));
+
+				pairs.add(new BasicNameValuePair("EmoLvl", ""+movie.getAverageEda()));
+
+				httppost.setEntity(new UrlEncodedFormEntity(pairs));
+
+				httpClient.getConnectionManager();
+				HttpResponse response = httpClient.execute(httppost);
+
+				if(response.getStatusLine().getStatusCode() == 200){
+					Log.i("current","Sent the movie to database");
+				}
 			}
-			
-			
+
 		}catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} catch (ClientProtocolException e) {
@@ -96,5 +99,5 @@ public class ServerCommunication {
 			e.printStackTrace();
 		}
 	}
-	
+
 }

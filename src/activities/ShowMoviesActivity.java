@@ -1,6 +1,7 @@
 package activities;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -32,7 +33,7 @@ public class ShowMoviesActivity extends Activity {
 		// set resID to be a specefic layout
 		int resID = R.layout.list_item;
 
-		
+
 		// Combine the list to the layout
 		aa = new ArrayAdapter<String>(this.getApplicationContext(), resID , moviesList);
 
@@ -40,15 +41,20 @@ public class ShowMoviesActivity extends Activity {
 		moviesListView.setAdapter(aa);
 
 		//Add items to list view 
-		for(Movie m : MainActivity.moviesList)
-			moviesList.add(m.toString());
-		
+		MainActivity currentMain = MainActivity.getCurrentMainActivity();
+
+		if (currentMain != null) {
+			List<Movie> currentMainList = currentMain.getMovieList();
+			for(Movie m : currentMainList)
+				moviesList.add(m.toString());
+		}
+
 		aa.notifyDataSetChanged();
 		moviesListView.setTextFilterEnabled(true);
-		
+
 		moviesListView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-				
+
 				// When clicked, show a toast with the TextView text
 				String text = ((TextView) view).getText().toString();
 				Toast toast = Toast.makeText(getApplicationContext(),"Clicked on: " + text, Toast.LENGTH_SHORT);
@@ -56,35 +62,40 @@ public class ShowMoviesActivity extends Activity {
 			}
 		});
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 		// Add items to list view
 		moviesList.clear();
-		for (Movie m : MainActivity.moviesList)
-			moviesList.add(m.toString());
+		
+		MainActivity currentMain = MainActivity.getCurrentMainActivity();
+		if (currentMain != null) {
+			List<Movie> currentList = currentMain.getMovieList();
+			for (Movie m : currentList)
+				moviesList.add(m.toString());
+		}
 
 		aa.notifyDataSetChanged();
 	}
-	
+
 	// Define what each button shall do
-		public void onClick(View view) {
-			 Intent myIntent;
-			switch (view.getId()) {
+	public void onClick(View view) {
+		Intent myIntent;
+		switch (view.getId()) {
 
-			// Starts the "new movie" intent
-			case R.id.show_new_movie_button:				
-				myIntent = new Intent(view.getContext(), FindMovieActivity.class);
-				startActivity(myIntent); 
-				break;
-				
+		// Starts the "new movie" intent
+		case R.id.show_new_movie_button:				
+			myIntent = new Intent(view.getContext(), FindMovieActivity.class);
+			startActivity(myIntent); 
+			break;
+
 			// Closes the activity and return to previous
-			case R.id.show_movie_back_button:
-				finish();
-				break;
-			}
-
+		case R.id.show_movie_back_button:
+			finish();
+			break;
 		}
+
+	}
 
 }

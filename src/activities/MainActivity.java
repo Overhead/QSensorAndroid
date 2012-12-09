@@ -135,12 +135,24 @@ public class MainActivity extends Activity {
     	return this.age;
     }
     
+    public void setAge(String age) {
+    	this.age = age;
+    }
+    
     public String getServerIP() {
     	return this.SERVER_IP;
     }
     
+    public void setServerIP(String serverIP) {
+		this.SERVER_IP = serverIP;
+	}
+    
     public String getGender(){
     	return this.gender;
+    }
+    
+    public void setGender(String gender) {
+    	this.gender = gender;
     }
     
     public String getMovieName(){
@@ -149,6 +161,17 @@ public class MainActivity extends Activity {
     
     public void setMovieName(String movieName){
     	this.movieName = movieName;
+    }
+    
+    public List<Movie> getMovieList() {
+    	return this.moviesList;
+    }
+    
+    public void setMovieList(List<Movie> newMovieList) {
+    	this.moviesList.clear();
+    	for (Movie movie:newMovieList) {
+    		this.moviesList.add(movie);
+    	}
     }
     
    
