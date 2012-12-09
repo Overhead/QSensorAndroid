@@ -5,7 +5,6 @@ import helpers.StartNewAsyncTask;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -23,7 +22,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,10 +30,6 @@ import classes.Movie;
 import classes.QSensorBTDevice;
 
 import com.example.qsensorapp.R;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GraphView.GraphViewData;
-import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.LineGraphView;
 
 import database.DBAdapter;
 
@@ -52,7 +46,7 @@ public class NewMovieActivity extends Activity {
 	BroadcastReceiver discoveryMonitor;
 	BroadcastReceiver discoveryResult;
 	LinearLayout layout;
-	GraphView graphView;
+	//GraphView graphView;
 	double averageEda = 0;
 	double averageBaseEDA = 0;
 	LinkedList<Emotion> movieEmotions;
@@ -70,7 +64,7 @@ public class NewMovieActivity extends Activity {
 		movieName = (TextView)findViewById(R.id.movieNameTextField);
 		movieEmotions = new LinkedList<Emotion>();
 		bluetooth = BluetoothAdapter.getDefaultAdapter();
-		graphView = new LineGraphView(this, "GraphViewDemo");
+		//graphView = new LineGraphView(this, "GraphViewDemo");
 		layout = (LinearLayout) findViewById(R.id.linearLGraph);
 		movieName.setText(MainActivity.movieName);
 		Bundle intent = getIntent().getExtras(); 
@@ -82,26 +76,26 @@ public class NewMovieActivity extends Activity {
 		try {
 			if (!emotions.isEmpty()) {
 				double time = 0;
-				ArrayList<GraphViewData> grapData = new ArrayList<GraphViewData>();
+				//ArrayList<GraphViewData> grapData = new ArrayList<GraphViewData>();
 				for (int i = 0; i < emotions.size(); i++) {
-					grapData.add(new GraphViewData(emotions.get(i).getTime(),emotions.get(i).getEDA()));
+					//grapData.add(new GraphViewData(emotions.get(i).getTime(),emotions.get(i).getEDA()));
 
 				}
 				time = emotions.get(emotions.size() - 1).getTime();
 				Log.i("Graph", "Time: " + time);
 
 				// add data
-				graphView.addSeries(new GraphViewSeries(grapData.toArray(new GraphViewData[0])));
+				//graphView.addSeries(new GraphViewSeries(grapData.toArray(new GraphViewData[0])));
 				// set view port, start=2, size=40
-				if (time < 60)
-					graphView.setViewPort(0, time);
-				else if (time < 600)
-					graphView.setViewPort(0, time / 2);
-				else
-					graphView.setViewPort(0, time / 4);
+				//if (time < 60)
+					//graphView.setViewPort(0, time);
+				//else if (time < 600)
+					//graphView.setViewPort(0, time / 2);
+				//else
+					//graphView.setViewPort(0, time / 4);
 
-				graphView.setScrollable(true);
-				layout.addView(graphView);
+				//graphView.setScrollable(true);
+				//layout.addView(graphView);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

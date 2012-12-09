@@ -1,6 +1,5 @@
 package activities;
 
-import helpers.ServerCommunication;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,8 +14,8 @@ import com.example.qsensorapp.R;
 
 public class SettingsActivity extends Activity {
 
-	EditText ageField;
-	EditText ipAddress;
+	private EditText ageField;
+	private EditText ipAddress;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

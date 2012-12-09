@@ -20,16 +20,18 @@ import database.DBAdapter;
 public class MainActivity extends Activity {
 
 	private DBAdapter database;
-	public static String age = "N/A";
-	public static String gender = "N/A";
-	public static String movieName = "";
-	public static String SERVER_IP = "";
-	public static List<Movie> moviesList = new ArrayList<Movie>();
+	private String age = "N/A";
+	private String gender = "N/A";
+	private String movieName = "";
+	private String SERVER_IP = "";
+	private List<Movie> moviesList = new ArrayList<Movie>();
 	TextView infoField;
+	private static MainActivity current= null;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MainActivity.current=this;
         setContentView(R.layout.activity_main);
         
         database = new DBAdapter(this);
@@ -123,6 +125,30 @@ public class MainActivity extends Activity {
    	     	break;
     	}
        
+    }
+    
+    public static MainActivity getCurrentMainActivity() {
+    	return current;
+    }
+    
+    public String getAge() {
+    	return this.age;
+    }
+    
+    public String getServerIP() {
+    	return this.SERVER_IP;
+    }
+    
+    public String getGender(){
+    	return this.gender;
+    }
+    
+    public String getMovieName(){
+    	return this.movieName;
+    }
+    
+    public void setMovieName(String movieName){
+    	this.movieName = movieName;
     }
     
    

@@ -5,10 +5,12 @@ import helpers.StartNewAsyncTask;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,7 +29,7 @@ public class FindMovieActivity extends Activity {
 	EditText movieName;
 	Button searchButton;
 	List<String> imdbMovies = new ArrayList<String>(); 
-	public static List<Movie> imdbMoviesList = new ArrayList<Movie>();
+	public static volatile List<Movie> imdbMoviesList = new ArrayList<Movie>();
 	ArrayAdapter<String> aa;
 	ListView imdbMoviesListView;
 	
@@ -56,14 +58,18 @@ public class FindMovieActivity extends Activity {
 		imdbMoviesListView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
 				Intent myIntent = new Intent(view.getContext(), NewMovieActivity.class);
+				 
+				MainActivity main = MainActivity.getCurrentMainActivity();
+				if (main != null) {
 				
 				if(!imdbMoviesList.isEmpty()){
-					MainActivity.movieName = imdbMoviesList.get(position).getMovieName();
+					
+					main.setMovieName(imdbMoviesList.get(position).getMovieName());
 					myIntent.putExtra("IMDBID", imdbMoviesList.get(position).getImdbId());
 					myIntent.putExtra("YEAR", imdbMoviesList.get(position).getProductionYear());
 				}
 				else {
-					MainActivity.movieName = movieName.getText().toString();
+					main.setMovieName(movieName.getText().toString());
 					myIntent.putExtra("IMDBID", "1");
 					myIntent.putExtra("YEAR", Calendar.getInstance().get(Calendar.YEAR));
 				}
@@ -71,8 +77,9 @@ public class FindMovieActivity extends Activity {
 				//String text = ((TextView) view).getText().toString();
 				//Toast toast = Toast.makeText(getApplicationContext(),"Clicked on "+position + " : " + text, Toast.LENGTH_SHORT);
 				//toast.show();
+				startActivity(myIntent);
 
-	    	    startActivity(myIntent);
+				}
 	    	    finish();
 			}
 		});
@@ -97,6 +104,16 @@ public class FindMovieActivity extends Activity {
 				StartNewAsyncTask findMovies = new StartNewAsyncTask(movieName.getText().toString());
 				findMovies.execute(3);
 			
+				try {
+					findMovies.get();
+				} catch (InterruptedException e) {
+					Log.e("Async", e.getMessage());
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					Log.e("Async", e.getMessage());
+					e.printStackTrace();
+				}
+				
 				//Populate the listview
 				if(!imdbMoviesList.isEmpty())
 					for (Movie m : imdbMoviesList)
