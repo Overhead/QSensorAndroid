@@ -92,7 +92,6 @@ public class FindMovieActivity extends Activity {
 			// Start the search on the database for imdb movies
 			case R.id.search_imdb_button:
 				imdbMovies.clear();
-				Toast.makeText(getApplicationContext(), "Searching IMDB",Toast.LENGTH_SHORT).show();
 				
 				StartNewAsyncTask findMovies = new StartNewAsyncTask(movieName.getText().toString());
 				findMovies.execute(3);
