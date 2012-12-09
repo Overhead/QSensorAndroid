@@ -4,9 +4,11 @@ import helpers.StartNewAsyncTask;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -25,7 +27,7 @@ public class CommunityActivity extends Activity {
 	RadioButton femaleButton;
 	ArrayList<String> communityMoviesInListView = new ArrayList<String>(); 
 	ArrayAdapter<String> aa;
-	public static List<Movie> communityMoviesList = new ArrayList<Movie>();
+	public volatile static List<Movie> communityMoviesList = new ArrayList<Movie>();
 	ListView moviesListView;
 	String gender= "";
 	
@@ -51,9 +53,9 @@ public class CommunityActivity extends Activity {
 		
 		//Set gender when you enter page
 		if(maleButton.isChecked())
-			gender = "Male";
+			gender = "M";
 		else 
-			gender = "Female";
+			gender = "F";
 		
 			
 	}
@@ -73,11 +75,11 @@ public class CommunityActivity extends Activity {
 	    switch(view.getId()) {
 	        case R.id.radioButtonMale:
 	            if (checked)
-	                gender = "Male";
+	                gender = "M";
 	            break;
 	        case R.id.radioButtonFemale:
 	            if (checked)
-	                gender = "Female";
+	                gender = "F";
 	            break;
 	    }
 	}
@@ -94,10 +96,20 @@ public class CommunityActivity extends Activity {
 				communityMoviesInListView.clear();
 				StartNewAsyncTask findMovies = new StartNewAsyncTask(gender, ageField.getText().toString());
 				findMovies.execute(2);
+				try {
+					findMovies.get();
+				} catch (InterruptedException e) {
+					Log.e("Async", e.getMessage());
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					Log.e("Async", e.getMessage());
+					e.printStackTrace();
+				}
 			
 				//Populate the listview
-				for (Movie m : communityMoviesList)
+				for (Movie m : communityMoviesList) {
 					communityMoviesInListView.add(m.toString());
+				}
 	
 				aa.notifyDataSetChanged();
 				moviesListView.setAdapter(aa);

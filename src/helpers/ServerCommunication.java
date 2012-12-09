@@ -63,9 +63,7 @@ public class ServerCommunication {
 			pairs.add(new BasicNameValuePair("imdbId", movie.getImdbId()));
 			
 			MainActivity main = MainActivity.getCurrentMainActivity();
-			if (main == null) {
-				
-			} else {
+			if (main !=null){
 				String age = main.getAge();
 				if(!age.equalsIgnoreCase("n/a"))
 					pairs.add(new BasicNameValuePair("age", movie.getAge()));
@@ -151,7 +149,7 @@ public class ServerCommunication {
 
 			String url;
 			//Formats url 
-			if(gender.equalsIgnoreCase("male"))
+			if(gender.equalsIgnoreCase("m"))
 				url = serverURL+"/movie/movie/request?age="+age+"&gender=M";
 			else
 				url = serverURL+"/movie/movie/request?age="+age+"&gender=F";
@@ -163,7 +161,7 @@ public class ServerCommunication {
 	
 			HttpEntity entity = response.getEntity();
 			String responseText = EntityUtils.toString(entity);
-
+			Log.i("Database", responseText);
 			communityMovies = ParseXMLStringToList.getMoviesForAgeAndGender(responseText, gender, age);
 			
 			return communityMovies;

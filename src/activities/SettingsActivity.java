@@ -105,9 +105,9 @@ public class SettingsActivity extends Activity {
 
 				// Set value of gender
 				if (unitPos == 0)
-					currentMain.setGender("MALE");
+					currentMain.setGender("M");
 				else
-					currentMain.setGender("FEMALE");
+					currentMain.setGender("F");
 			}
 		}
 
