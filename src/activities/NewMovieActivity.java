@@ -67,7 +67,7 @@ public class NewMovieActivity extends Activity {
 		movieName = (TextView)findViewById(R.id.movieNameTextField);
 		movieEmotions = new LinkedList<Emotion>();
 		bluetooth = BluetoothAdapter.getDefaultAdapter();
-		//graphView = new LineGraphView(this, "GraphViewDemo");
+		graphView = new LineGraphView(this, "GraphViewDemo");
 		layout = (LinearLayout) findViewById(R.id.linearLGraph);
 		String mainMovieName = "";
 		MainActivity currentMain = MainActivity.getCurrentMainActivity();
@@ -389,7 +389,6 @@ public class NewMovieActivity extends Activity {
 		Log.i("SensorResult", "AverageBase: "+ averageBaseEDA);
 		Log.i("SensorResult", "Sending EDA to DB: "+movieEDA);
 		
-		//TODO fix production year
 		MainActivity currentMain = MainActivity.getCurrentMainActivity();
 		String mainMovieName = "";
 		String mainGender = "";
@@ -405,7 +404,7 @@ public class NewMovieActivity extends Activity {
 
 		database.insertEntry(m);
 
-		//Refresh the lit in the "My Movies" page
+		//Refresh the list in the "My Movies" page
 		if(!database.getAllMovies().isEmpty()) {
 			if (currentMain != null) {
 				currentMain.setMovieList(database.getAllMovies());

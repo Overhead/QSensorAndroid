@@ -20,6 +20,7 @@ import database.DBAdapter;
 public class MainActivity extends Activity {
 
 	private DBAdapter database;
+	
 	private String age = "N/A";
 	private String gender = "N/A";
 	private String movieName = "";
@@ -31,6 +32,18 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        //transfer the old values to the new main activity
+        MainActivity old = MainActivity.getCurrentMainActivity();
+        if (old != null) {
+        	this.setAge(old.getAge());
+        	this.setGender(old.getGender());
+        	this.setMovieName(old.getMovieName());
+        	this.setServerIP(old.getServerIP());
+        	
+        	this.moviesList = old.moviesList;
+        }
+        
         MainActivity.current=this;
         setContentView(R.layout.activity_main);
         

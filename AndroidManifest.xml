@@ -33,7 +33,8 @@
         </activity>
         <activity
             android:name="activities.NewMovieActivity"
-            android:label="@string/title_activity_new_movie" >
+            android:label="@string/title_activity_new_movie" 
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="activities.SettingsActivity"
@@ -41,11 +42,13 @@
         </activity>
         <activity
             android:name="activities.CommunityActivity"
-            android:label="@string/title_activity_comunity" >
+            android:label="@string/title_activity_comunity"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="activities.FindMovieActivity"
-            android:label="@string/title_activity_find_movie" >
+            android:label="@string/title_activity_find_movie"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 
