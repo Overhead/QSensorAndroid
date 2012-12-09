@@ -99,7 +99,6 @@ public class FindMovieActivity extends Activity {
 			// Start the search on the database for imdb movies
 			case R.id.search_imdb_button:
 				imdbMovies.clear();
-				Toast.makeText(getApplicationContext(), "Searching IMDB",Toast.LENGTH_SHORT).show();
 				
 				StartNewAsyncTask findMovies = new StartNewAsyncTask(movieName.getText().toString());
 				findMovies.execute(3);
@@ -118,10 +117,11 @@ public class FindMovieActivity extends Activity {
 				if(!imdbMoviesList.isEmpty())
 					for (Movie m : imdbMoviesList)
 						imdbMovies.add(m.imdbToString());
-				else {
+				else if(!movieName.getText().toString().equalsIgnoreCase("")){
 					Toast.makeText(getApplicationContext(), "No connection to server or\n No result with this name",Toast.LENGTH_SHORT).show();
 					imdbMovies.add("No movie found\nClick to create movie with name: " + movieName.getText().toString());
-				}
+				}else
+					Toast.makeText(getApplicationContext(), "Enter a movie name",Toast.LENGTH_SHORT).show();
 				aa.notifyDataSetChanged();
 				imdbMoviesListView.setAdapter(aa);
 				break;
