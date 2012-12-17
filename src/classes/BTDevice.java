@@ -5,19 +5,19 @@ package classes;
  * @author Tjarb
  *
  */
-public class QSensorBTDevice {
+public class BTDevice {
 	
 	String name;
 	String address;
 	String uuid;
 	
-	public QSensorBTDevice(String name, String address, String uuid){
+	public BTDevice(String name, String address, String uuid){
 		this.name = name;
 		this.address = address;
 		this.uuid = uuid;
 	}
 	
-	public QSensorBTDevice(String name, String address){
+	public BTDevice(String name, String address){
 		this.name = name;
 		this.address = address;
 	}

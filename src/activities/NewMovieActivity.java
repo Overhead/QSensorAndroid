@@ -1,22 +1,18 @@
 package activities;
 
+import helpers.BluetoothManager;
 import helpers.StartNewAsyncTask;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
@@ -26,13 +22,15 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import classes.BTDevice;
 import classes.Emotion;
 import classes.Movie;
-import classes.QSensorBTDevice;
 
 import com.example.qsensorapp.R;
-import com.jjoe64.graphview.*;
-import com.jjoe64.graphview.GraphView.*;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.GraphViewSeries;
+import com.jjoe64.graphview.LineGraphView;
 
 import database.DBAdapter;
 
@@ -43,9 +41,8 @@ public class NewMovieActivity extends Activity {
 	boolean recording;
 	private DBAdapter database;
 	final int DISCOVERY_REQUEST = 0;
-	QSensorBTDevice qSensor;
+	BTDevice qSensor;
 	final String QSensorName = "affectivaQ-v2-7d5c";
-	BluetoothAdapter bluetooth;
 	BroadcastReceiver discoveryMonitor;
 	BroadcastReceiver discoveryResult;
 	LinearLayout layout;
@@ -55,6 +52,8 @@ public class NewMovieActivity extends Activity {
 	LinkedList<Emotion> movieEmotions;
 	String imdbMovieId;
 	int productionYear;
+	BluetoothManager bluetooth;
+    BluetoothSocket qSensorClient;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +65,8 @@ public class NewMovieActivity extends Activity {
 		
 		movieName = (TextView)findViewById(R.id.movieNameTextField);
 		movieEmotions = new LinkedList<Emotion>();
-		bluetooth = BluetoothAdapter.getDefaultAdapter();
+		//bluetooth = BluetoothAdapter.getDefaultAdapter();
+		bluetooth = new BluetoothManager();
 		graphView = new LineGraphView(this, "GraphViewDemo");
 		layout = (LinearLayout) findViewById(R.id.linearLGraph);
 		String mainMovieName = "";
@@ -124,14 +124,19 @@ public class NewMovieActivity extends Activity {
 				Toast.makeText(getApplicationContext(), "Add a movie name",Toast.LENGTH_SHORT).show();
 			else{
 				if(!recording){
-					StartbluetoothConnection();
+					bluetooth.startBluetoothDiscovery();
 				}
 				else{
 					//When not recording stop bluetooth and send movie to database
-					stopBluetoothConnection();
-					recording = false;
-					SendMovieToDatabase();
-					Toast.makeText(getApplicationContext(), "Movie added",Toast.LENGTH_SHORT).show();
+					if(bluetooth.stopBluetoothConnection()) {
+					//stopBluetoothConnection();
+						recording = false;
+						SendMovieToDatabase();
+						Toast.makeText(getApplicationContext(), "Movie added",Toast.LENGTH_SHORT).show();
+						recordButton.setText("Start recording");
+					}else{
+						Toast.makeText(getApplicationContext(), "Something went wrong when turning off",Toast.LENGTH_SHORT).show();
+					}
 				}
 			}
 			break;
@@ -163,27 +168,6 @@ public class NewMovieActivity extends Activity {
 	    return super.onKeyDown(keyCode, event);
 	}
 	
-	/**
-	 * Starts a request and gives the user a dialog box that the application request to use bluetooth
-	 */
-	public void StartbluetoothConnection() {
-		startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE),
-				DISCOVERY_REQUEST);
-	}
-
-	/**
-	 * Stops the bluetooth connection
-	 */
-	public void stopBluetoothConnection(){
-
-		if(BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-			Toast.makeText(getApplicationContext(), "Turned bluetooth off",
-					Toast.LENGTH_SHORT).show();
-			bluetooth.disable();
-
-			recordButton.setText("Start recording");
-		}
-	}
 
 	/**
 	 * Override the ActivityResult, used to handle the result of turning on bluetooth
@@ -202,124 +186,25 @@ public class NewMovieActivity extends Activity {
 				MainActivity currentMain = MainActivity.getCurrentMainActivity();
 				if (currentMain != null) {
 					currentMain.setMovieName(movieName.getText().toString());
+					
+					qSensor = bluetooth.discoverAndFindDevice(QSensorName);
+					if(qSensor != null){
+						qSensorClient = bluetooth.connectToDevice(qSensor);
+						if(qSensorClient != null){
+							try {
+								receiveQSensorData(qSensorClient);
+							} catch (IOException e) {
+								Log.e("QSensorData", "Error in receiving data from BT device");
+								e.printStackTrace();
+							}
+						}
+					}
 				}
-				discover();
 			}
 		}
 
 	}	
 	
-	/**
-	 * Method that discover nearby bluetooth devices
-	 */
-	private void discover() {
-
-		// Broadcastreceiver for start and stop of search:
-		discoveryMonitor = new BroadcastReceiver() {
-			String dStarted = BluetoothAdapter.ACTION_DISCOVERY_STARTED;
-			String dFinished = BluetoothAdapter.ACTION_DISCOVERY_FINISHED;
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				
-				if (dStarted.equals(intent.getAction())) {
-					// Discovery has started.
-					Toast.makeText(getApplicationContext(),
-							"Discovery Started...", Toast.LENGTH_SHORT).show();
-				} else if (dFinished.equals(intent.getAction())) {
-					// Discovery has completed.
-					Toast.makeText(getApplicationContext(),
-							"Discovery Completed...", Toast.LENGTH_SHORT).show();
-					
-					//Stop the discovery process, is needed to be able to connect
-					bluetooth.cancelDiscovery();
-
-					//Unregisters the discovery recievers after it is done
-					unregisterReceiver(discoveryMonitor);
-					unregisterReceiver(discoveryResult);
-
-					//Set up connection to QSensor
-					connectToDevice();
-				}
-			}
-		};
-		this.registerReceiver(discoveryMonitor, new IntentFilter(
-				BluetoothAdapter.ACTION_DISCOVERY_STARTED));
-		this.registerReceiver(discoveryMonitor, new IntentFilter(
-				BluetoothAdapter.ACTION_DISCOVERY_FINISHED));
-		
-		// Broadcasting for discovered devices:
-		discoveryResult = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				String remoteDeviceName = intent
-						.getStringExtra(BluetoothDevice.EXTRA_NAME);
-				BluetoothDevice remoteDevice = intent
-						.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-				Toast.makeText(getApplicationContext(),
-						"Discovered: " + remoteDeviceName + "\nAddress: " + remoteDevice, Toast.LENGTH_SHORT)
-						.show();
-				
-				//Create QSensor object if the QSensor given by name is found in the discovery process
-				if(remoteDeviceName.toString().equalsIgnoreCase(QSensorName))
-					qSensor = new QSensorBTDevice(remoteDeviceName, remoteDevice.getAddress());
-			}
-		};
-		registerReceiver(discoveryResult, new IntentFilter(
-				BluetoothDevice.ACTION_FOUND));
-		if (!bluetooth.isDiscovering())
-			bluetooth.startDiscovery();
-	}
-
-	
-	/**
-	 * Method that connects Android phone to the Qsensor
-	 */
-	public void connectToDevice() {
-
-		//If the QSensor object, that will be created in the discovery process is null, the sensor was not found
-		if (qSensor != null) {
-			try {
-
-				Toast.makeText(
-						getApplicationContext(),
-						"Connecting to: " + qSensor.getName() + "\nAddress: "
-								+ qSensor.getAddress(), Toast.LENGTH_SHORT)
-								.show();
-
-				//BluetoothAdapter bluetooth = BluetoothAdapter.getDefaultAdapter();
-
-				//Get the QSensor device
-				BluetoothDevice device = bluetooth.getRemoteDevice(qSensor.getAddress());
-
-				//Initiate the connection to device
-				Method m = device.getClass().getMethod("createRfcommSocket", new Class[] {int.class});
-				BluetoothSocket clientSocket = (BluetoothSocket) m.invoke(device, 1);
-
-				//Connect to the sensor
-				clientSocket.connect();
-				
-				//When connected, start data transfer
-				if(clientSocket.isConnected()){
-					receiveQSensorData(clientSocket);
-				}
-
-			} catch (Exception e) {
-				//If connection failed, disable bluetooth
-				bluetooth.disable();
-				Toast.makeText(getApplicationContext(),
-						"Connection to " + qSensor.getName() + " failed.",
-						Toast.LENGTH_SHORT).show();
-				Log.d("BLUETOOTH", e.getMessage());
-			} 
-		} else {
-			
-			//If the Qsensor object is null
-			Toast.makeText(getApplicationContext(), "Qsensor not found",
-					Toast.LENGTH_SHORT).show();
-			bluetooth.disable();
-		}
-	}
-
 	/**
 	 * Method that takes the QSensor client, and start receiving the data it transmits
 	 * TODO: Handle QSensor data
