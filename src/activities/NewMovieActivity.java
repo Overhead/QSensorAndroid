@@ -21,6 +21,8 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -81,6 +83,29 @@ public class NewMovieActivity extends Activity {
 		productionYear = intent.getInt("YEAR");
 	}
 
+	 @Override
+	    public boolean onCreateOptionsMenu(Menu menu) {
+	        // Inflate the menu; this adds items to the action bar if it is present.
+	        getMenuInflater().inflate(R.menu.menu, menu);
+	        return true;
+	    }
+	 
+	 /**
+	     * Choices for the menu
+	     */
+	    @Override
+		public boolean onOptionsItemSelected(MenuItem item) {
+			// Handle item selection
+			switch (item.getItemId()) {
+			case R.id.settings:
+				Intent newIntent = new Intent(getApplicationContext(), SettingsActivity.class);
+				startActivity(newIntent);
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+			}
+		}
+	
 	public void drawGraph(LinkedList<Emotion> emotions){
 		try {
 			if (!emotions.isEmpty()) {
