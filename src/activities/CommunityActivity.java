@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -63,8 +65,24 @@ public class CommunityActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_comunity, menu);
+		getMenuInflater().inflate(R.menu.menu, menu);
 		return true;
+	}
+	
+	/**
+     * Choices for the menu
+     */
+    @Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+		case R.id.settings:
+			Intent newIntent = new Intent(getApplicationContext(), SettingsActivity.class);
+			startActivity(newIntent);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 	
 	public void onRadioButtonClicked(View view) {
