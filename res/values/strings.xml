@@ -26,5 +26,6 @@
     <string name="searchImdb">Search in IMDB</string>
     <string name="title_activity_find_movie">FindMovieActivity</string>
     <string name="nothing_added">N/A</string>
+    <string name="qsensorName">affectivaQ-v2-7d5c</string>
 
 </resources>

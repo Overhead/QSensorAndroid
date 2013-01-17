@@ -23,12 +23,39 @@ public class MainActivity extends Activity {
 
 	private DBAdapter database;
 	
+	/**
+	 * The age of the current user
+	 */
 	private String age = "N/A";
+	
+	/**
+	 * Gender of the user
+	 */
 	private String gender = "N/A";
+	
+	/**
+	 * current movie name
+	 */
 	private String movieName = "";
+	
+	/**
+	 * Server ip to send the average emotion data to
+	 */
 	private String SERVER_IP = "";
+	
+	/**
+	 * contains all movies that have been in the local database
+	 */
 	private List<Movie> moviesList = new ArrayList<Movie>();
-	TextView infoField;
+	
+	/**
+	 * the text field where age and gender of the user is shown
+	 */
+	private TextView infoField;
+	
+	/**
+	 * the last mainactivity. Set and used to transport all values from the old to the new mainactivity
+	 */
 	private static MainActivity current= null;
 	
     @Override
@@ -120,10 +147,10 @@ public class MainActivity extends Activity {
 	}
     
     /**
-     * Choices for each button
-     * @param view
+     * called if a button is clicked
+     * @param view the button on which was clicked
      */
-  //Define what each button shall do
+
     public void onClick(View view) {
     	Intent myIntent;
     	switch(view.getId()) {
@@ -153,46 +180,91 @@ public class MainActivity extends Activity {
        
     }
     
+    /** Method used to store the mainactivity and transport values
+     * 
+     * @return last created main activity
+     */
     public static MainActivity getCurrentMainActivity() {
     	return current;
     }
     
+    /** 
+     * 
+     * @return the age set from the user
+     */
     public String getAge() {
     	return this.age;
     }
     
+    
+    /**
+     * 
+     * @param age age to set in this MainActivity
+     */
     public void setAge(String age) {
     	this.age = age;
     }
     
+    /**
+     * 
+     * @return last set serverip
+     */
     public String getServerIP() {
     	return this.SERVER_IP;
     }
     
+    /**
+     * 
+     * @param serverIP the new server ip
+     */
     public void setServerIP(String serverIP) {
 		this.SERVER_IP = serverIP;
 	}
     
+    /**
+     * 
+     * @return the last set gender
+     */
     public String getGender(){
     	return this.gender;
     }
     
+    /**
+     * 
+     * @param gender the new gender
+     */
     public void setGender(String gender) {
     	this.gender = gender;
     }
     
+    /**
+     * 
+     * @return the last set movie name
+     */
     public String getMovieName(){
     	return this.movieName;
     }
     
+    /**
+     * 
+     * @param movieName the new movie name
+     */
     public void setMovieName(String movieName){
     	this.movieName = movieName;
     }
     
+    /**
+     * 
+     * @return all known movies
+     */
     public List<Movie> getMovieList() {
     	return this.moviesList;
     }
     
+    /** Called to transport movielist from the old mainactivity
+     * 
+     * @param newMovieList new movie list
+     */
     public void setMovieList(List<Movie> newMovieList) {
     	this.moviesList.clear();
     	for (Movie movie:newMovieList) {

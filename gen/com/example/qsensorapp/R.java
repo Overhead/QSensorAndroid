@@ -92,6 +92,7 @@ public final class R {
         public static final int my_movies_button=0x7f040006;
         public static final int new_movie_button=0x7f040005;
         public static final int nothing_added=0x7f04001a;
+        public static final int qsensorName=0x7f04001b;
         public static final int searchButton=0x7f040017;
         public static final int searchImdb=0x7f040018;
         public static final int set_settings_button=0x7f040010;
