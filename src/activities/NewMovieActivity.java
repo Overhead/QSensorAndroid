@@ -16,14 +16,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -41,6 +42,38 @@ import com.jjoe64.graphview.LineGraphView;
 import database.DBAdapter;
 
 public class NewMovieActivity extends Activity {
+	/**
+	 * set to true will this create a thread which will every 10ms add a new value to the graphview. No Bluetooth needed
+	 */
+	private static final boolean DEBUG_GRAPH = false; //set true to create a new thread which will 
+
+	/**
+	 * ACTION for the broadcast event to add new data to the graph
+	 */
+	private static final String EDA_MESSAGE_ACTION = "qsensor.newmovieactivity.action.eda_broadcast_message_action";
+
+	/**
+	 * String indicates the content in the extras of a created broadcast event
+	 * The broadcast has here stored the time of an eda event (double) 
+	 */
+	private static final String EDA_BROADCAST_TIME = "qsensor.newmovieactivity.broadcastextras.eda_time";
+	/**
+	 * String indicates the content in the extras of a created broadcast event
+	 * The broadcast has here stored the eda value measured in an eda event (double) 
+	 */
+	private static final String EDA_BROADCAST_EDA = "qsensor.newmovieactivity.broadcastextras.eda_itself";
+	/**
+	 * String indicates the content in the extras of a created broadcast event
+	 * The broadcast has here stored here a boolean indicating if the graph should scroll to the end or not
+	 */
+	private static final String EDA_BROADCAST_SCROLL = "qsensor.newmovieactivity.broadcastextras.eda_scroll_to_graph_end";
+
+	/**
+	 * String indicates the content in the extras of a created broadcast event
+	 * The broadcast has in this boolean value stored if it is the first appeared eda event (adds and setup a new graphview)  
+	 */
+	private static final String EDA_BROADCAST_ISFIRST = "qsensor.newmovieactivity.broadcastextras.is_first_eda";
+
 
 	TextView movieName;
 	Button recordButton;
@@ -59,8 +92,6 @@ public class NewMovieActivity extends Activity {
 	String imdbMovieId;
 	int productionYear;
 	private volatile GraphViewSeries series;
-
-	private final Handler handler = new Handler();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +126,48 @@ public class NewMovieActivity extends Activity {
 		Bundle intent = getIntent().getExtras();
 		imdbMovieId = intent.getString("IMDBID");
 		productionYear = intent.getInt("YEAR");
+
+		registerReceiver(mHandleMessageReceiver,new IntentFilter(EDA_MESSAGE_ACTION));
+
+		if(DEBUG_GRAPH) {
+			startGraphDebug();
+		}
 	}
 
+	/**
+	 * started if DEBUG_GRAPH is set to true
+	 * This will create a thread that broadcasts 300 generated data every 100ms to update the graph
+	 */
+	private void startGraphDebug() {
+		// create the thread
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				for (int i=0; i<300; i++) {
+					NewMovieActivity.broadcastEDA(getApplicationContext(), i==0, i+5, i%2==0?i*5:i, true);
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+
+						e.printStackTrace();
+					}
+				}
+			}
+		}).start();
+
+	}
+
+	/**
+	 *  sets the pixel format to improve the background which is drawn in bad quality on some phones
+	 */
+	@Override
+	public void onAttachedToWindow() {
+		super.onAttachedToWindow();
+		Window window = getWindow();
+		window.setFormat(PixelFormat.RGBA_8888);
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -230,6 +301,13 @@ public class NewMovieActivity extends Activity {
 
 	}
 
+	@Override
+	protected void onDestroy() {
+		// deregister the receiver
+		unregisterReceiver(mHandleMessageReceiver);
+		super.onDestroy();
+	}
+
 	/**
 	 * Method that discover nearby bluetooth devices
 	 */
@@ -353,7 +431,7 @@ public class NewMovieActivity extends Activity {
 
 	/**
 	 * Method that takes the QSensor client, and start receiving the data it
-	 * transmits TODO: Handle QSensor data
+	 * transmits
 	 * 
 	 * @throws IOException
 	 */
@@ -398,30 +476,15 @@ public class NewMovieActivity extends Activity {
 							final Emotion emo = new Emotion(eda, timeElapsed);
 							movieEmotions.add(emo);
 							averageEda += eda;
-							
+							boolean scroll = emo.getTime()>100;
+
 							//update the graphview
 							if (first) {
 								//first eda element. add a new serie to the graphview
-								NewMovieActivity.this.handler.post(new Runnable() {
-
-									@Override
-									public void run() {
-										GraphViewData newData = new GraphViewData(emo.getTime(), emo.getEDA());
-										GraphViewData[] startArray = new GraphViewData[]{newData};
-										NewMovieActivity.this.series = new GraphViewSeries(startArray);
-										NewMovieActivity.this.graphView.addSeries(series);
-									}
-								});
+								NewMovieActivity.broadcastEDA(getApplicationContext(), true, emo.getTime(), emo.getEDA(), scroll);
 							} else {
-								final boolean scroll = emo.getTime()>100;
-								NewMovieActivity.this.handler.post(new Runnable() {
-
-									@Override
-									public void run() {
-										GraphViewData newData = new GraphViewData(emo.getTime(), emo.getEDA());
-										NewMovieActivity.this.series.appendData(newData, scroll);
-									}
-								});
+								// broadcast the eda to update the graph
+								NewMovieActivity.broadcastEDA(getApplicationContext(), false, emo.getTime(), emo.getEDA(), scroll);
 							}
 
 						}
@@ -444,7 +507,6 @@ public class NewMovieActivity extends Activity {
 	 * Method that send the recorded data on a movie to the PhpAdmin Database
 	 * aswell as the phones database
 	 * 
-	 * @param eda
 	 */
 	public void SendMovieToDatabase() {
 
@@ -489,6 +551,55 @@ public class NewMovieActivity extends Activity {
 		// Reset AverageEda
 		averageEda = 0;
 		averageBaseEDA = 0;
+	}
+
+	/**
+	 * this broadcast receiver updates the graph when a new eda event is received
+	 */
+	private final BroadcastReceiver mHandleMessageReceiver = new BroadcastReceiver() {
+		private double startTime;
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Bundle extras = intent.getExtras();
+			double time = extras.getDouble(EDA_BROADCAST_TIME);
+			double eda = extras.getDouble(EDA_BROADCAST_EDA);
+			boolean scroll = extras.getBoolean(EDA_BROADCAST_SCROLL);
+			boolean first = extras.getBoolean(EDA_BROADCAST_ISFIRST);
+
+			GraphViewData newData = new GraphViewData(time, eda);
+
+			if (first) {
+				GraphViewData[] startArray = new GraphViewData[]{newData};
+				NewMovieActivity.this.series = new GraphViewSeries(startArray);
+				NewMovieActivity.this.graphView.addSeries(series);
+				this.startTime=time;
+				NewMovieActivity.this.graphView.setViewPort(time, time+1);
+			} else {
+				NewMovieActivity.this.series.appendData(newData, scroll);
+			}
+
+			//set the viewport always from the first to the last value
+			NewMovieActivity.this.graphView.setViewPort(startTime, time-startTime);
+		}
+	};
+
+	/**
+	 * Notifies UI to update the graph
+	 *
+	 * @param context application's context
+	 * @param isfirst boolean if the eda event is the first event appearing. Will be stored in the intents extras field EDA_BROADCAST_ISFIRST
+	 * @param time double the time of the eda event. Will be stored in the intents extras field EDA_BROADCAST_TIME
+	 * @param eda double the received emotion value for this event. Will be stored in the intents extras field EDA_BROADCAST_EDA
+	 * @param scrolltoend boolean if the graph should scroll to the end. Will be stored in the intents extras field EDA_BROADCAST_SCROLL
+	 */
+	public static void broadcastEDA(Context context, boolean isfirst, double time, double eda, boolean scrolltoend) {
+		Intent intent = new Intent(EDA_MESSAGE_ACTION);
+		intent.putExtra(EDA_BROADCAST_TIME, time);
+		intent.putExtra(EDA_BROADCAST_EDA, eda);
+		intent.putExtra(EDA_BROADCAST_SCROLL, scrolltoend);
+		intent.putExtra(EDA_BROADCAST_ISFIRST, isfirst);
+		context.sendBroadcast(intent);
 	}
 
 }

@@ -5,10 +5,12 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -63,6 +65,16 @@ public class ShowMoviesActivity extends Activity {
 				toast.show();
 			}
 		});
+	}
+	
+	/**
+	 *  sets the pixel format to improve the background which is drawn in bad quality on some phones
+	 */
+	@Override
+	public void onAttachedToWindow() {
+		super.onAttachedToWindow();
+		Window window = getWindow();
+		window.setFormat(PixelFormat.RGBA_8888);
 	}
 
 	 @Override

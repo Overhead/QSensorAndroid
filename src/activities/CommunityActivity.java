@@ -8,11 +8,13 @@ import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -32,18 +34,18 @@ public class CommunityActivity extends Activity {
 	public volatile static List<Movie> communityMoviesList = new ArrayList<Movie>();
 	ListView moviesListView;
 	String gender= "";
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_comunity);
-		
+
 		ageField = (EditText)findViewById(R.id.communityAgeField);
 		maleButton = (RadioButton)findViewById(R.id.radioButtonMale);
 		femaleButton = (RadioButton)findViewById(R.id.radioButtonFemale);
-		
+
 		moviesListView = (ListView) findViewById(R.id.communityMoviesList);
-		
+
 		// set resID to be a specefic layout
 		int resID = R.layout.list_item;
 
@@ -52,14 +54,14 @@ public class CommunityActivity extends Activity {
 
 		// Sets the adapter into the view
 		moviesListView.setAdapter(aa);
-		
+
 		//Set gender when you enter page
 		if(maleButton.isChecked())
 			gender = "M";
 		else 
 			gender = "F";
-		
-			
+
+
 	}
 
 	@Override
@@ -68,11 +70,21 @@ public class CommunityActivity extends Activity {
 		getMenuInflater().inflate(R.menu.menu, menu);
 		return true;
 	}
-	
+
 	/**
-     * Choices for the menu
-     */
-    @Override
+	 *  sets the pixel format to improve the background which is drawn in bad quality on some phones
+	 */
+	@Override
+	public void onAttachedToWindow() {
+		super.onAttachedToWindow();
+		Window window = getWindow();
+		window.setFormat(PixelFormat.RGBA_8888);
+	}
+
+	/**
+	 * Choices for the menu
+	 */
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
@@ -84,31 +96,31 @@ public class CommunityActivity extends Activity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 	public void onRadioButtonClicked(View view) {
-	    // Is the button now checked?
-	    boolean checked = ((RadioButton) view).isChecked();
-	    
-	    // Check which radio button was clicked
-	    switch(view.getId()) {
-	        case R.id.radioButtonMale:
-	            if (checked)
-	                gender = "M";
-	            break;
-	        case R.id.radioButtonFemale:
-	            if (checked)
-	                gender = "F";
-	            break;
-	    }
+		// Is the button now checked?
+		boolean checked = ((RadioButton) view).isChecked();
+
+		// Check which radio button was clicked
+		switch(view.getId()) {
+		case R.id.radioButtonMale:
+			if (checked)
+				gender = "M";
+			break;
+		case R.id.radioButtonFemale:
+			if (checked)
+				gender = "F";
+			break;
+		}
 	}
-	
+
 	// Define what each button shall do
 	public void onClick(View view) {
 		switch (view.getId()) {
 
 		// Starts the "new movie" intent
 		case R.id.communitySearchButton:
-		
+
 			//Start a new AsyncTask that gets movies from myphp database online
 			if(!ageField.getText().toString().equalsIgnoreCase("")) {
 				communityMoviesInListView.clear();
@@ -123,18 +135,18 @@ public class CommunityActivity extends Activity {
 					Log.e("Async", e.getMessage());
 					e.printStackTrace();
 				}
-			
+
 				//Populate the listview
 				for (Movie m : communityMoviesList) {
 					communityMoviesInListView.add(m.toString());
 				}
-	
+
 				aa.notifyDataSetChanged();
 				moviesListView.setAdapter(aa);
 			}
 			else{
 				Toast.makeText(getApplicationContext(), "Type in age",
-	    				Toast.LENGTH_SHORT).show();
+						Toast.LENGTH_SHORT).show();
 			}
 			break;
 
