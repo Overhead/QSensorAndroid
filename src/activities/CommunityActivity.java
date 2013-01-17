@@ -97,6 +97,10 @@ public class CommunityActivity extends Activity {
 		}
 	}
 
+	/** called if a radio button is clicked
+	 * 
+	 * @param view the view whoch was clicked
+	 */
 	public void onRadioButtonClicked(View view) {
 		// Is the button now checked?
 		boolean checked = ((RadioButton) view).isChecked();
@@ -114,7 +118,10 @@ public class CommunityActivity extends Activity {
 		}
 	}
 
-	// Define what each button shall do
+	/**
+	 * Define what each button shall do
+	 * @param view the button on which was clicked
+	 */
 	public void onClick(View view) {
 		switch (view.getId()) {
 
